@@ -30,37 +30,88 @@ function App() {
   const [file, setFile] = useState(null);
   const [paragraphs, setParagraphs] = useState([{ id: 0, content: "" }]);
   const [showContentInConsole, setShowContentInConsole] = useState(false);
-
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+  const [isUnderlined, setIsUnderlined] = useState(false);
+  const [alignment, setAlignment] = useState("left");
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
   };
 
+  const applyBackendStyle = async (endpoint, data) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error al aplicar el estilo: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log(result.message);
+      console.log(result);
+    } catch (error) {
+      console.error("Error al aplicar el estilo:", error.message);
+    }
+  };
+
   const handleFontColorClick = () => {
     const color = prompt("Introduce el color de la fuente:", "#3c8dbc");
     setFontColor(color);
+    applyBackendStyle("changeTextColor", { textColor: color });
   };
 
   const handleBackColorClick = () => {
     const color = prompt("Introduce el color de fondo:", "orange");
     setBackColor(color);
+    applyBackendStyle("changeTextBackgroundColor", { backgroundColor: color });
   };
-
-  const handleLink = () => {
-    const url = prompt("Introduce la URL:");
-    // Lógica para insertar enlace aquí (puedes usar alguna librería como `react-draft-wysiwyg` para funcionalidad avanzada)
-  };
-
   const handleFontSizeChange = (e) => {
-    const size = e.target.value + "pt";
-    setFontSize(size);
+    const newSize = e.target.value + "pt";
+    setFontSize(newSize);
+    applyBackendStyle("changeTextSize", { size: newSize });
   };
 
-  const applyStyle = (style, value) => {
+  const applyTextAlignment = async (newAlignment) => {
+    try {
+      await applyBackendStyle("changeTextAlignment", {
+        alignment: newAlignment,
+      });
+      setAlignment(newAlignment);
+    } catch (error) {
+      console.error("Error al cambiar la alineación:", error.message);
+    }
+  };
+
+  const applyStyleToContentEditable = (style, value) => {
     document.execCommand("styleWithCSS", null, true);
     document.execCommand(style, false, value);
     document.execCommand("styleWithCSS", null, false);
+  };
+
+  const applyBoldStyle = () => {
+    applyBackendStyle("changeTextBold", { bold: !isBold });
+    applyStyleToContentEditable("bold");
+    setIsBold(!isBold);
+  };
+
+  const applyItalicStyle = () => {
+    applyBackendStyle("changeTextItalic", { italic: !isItalic });
+    applyStyleToContentEditable("italic");
+    setIsItalic(!isItalic);
+  };
+
+  const applyUnderlineStyle = () => {
+    applyBackendStyle("changeTextUnderline", { underline: !isUnderlined });
+    applyStyleToContentEditable("underline");
+    setIsUnderlined(!isUnderlined);
   };
 
   const handleEnter = (e) => {
@@ -116,18 +167,20 @@ function App() {
 
   const generarContenido = () => {
     let contenido = "";
-  
+
     if (tableDimensions.rows > 0 && tableDimensions.columns > 0) {
-      contenido += `<div>${TableComponent({ rows: tableDimensions.rows, columns: tableDimensions.columns })}</div>`;
+      contenido += `<div>${TableComponent({
+        rows: tableDimensions.rows,
+        columns: tableDimensions.columns,
+      })}</div>`;
     }
-  
+
     if (file) {
       contenido += `<div>${ImageComponent({ file })}</div>`;
     }
-  
+
     return contenido;
   };
-  
 
   return (
     <div className="App">
@@ -137,34 +190,47 @@ function App() {
         <div id="painelEditor">
           <button
             className="btnColor"
-            onClick={() => applyStyle("justifyLeft")}
+            onClick={() => applyTextAlignment("left")}
           >
             <FaAlignLeft />
           </button>
           <button
             className="btnColor"
-            onClick={() => applyStyle("justifyCenter")}
+            onClick={() => applyTextAlignment("center")}
           >
             <FaAlignCenter />
           </button>
           <button
             className="btnColor"
-            onClick={() => applyStyle("justifyRight")}
+            onClick={() => applyTextAlignment("right")}
           >
             <FaAlignRight />
           </button>
-          <button className="btnColor" onClick={() => applyStyle("bold")}>
+
+          <button
+            className="btnColor"
+            onClick={applyBoldStyle}
+            style={{ fontWeight: isBold ? "bold" : "normal" }}
+          >
             <FaBold />
           </button>
-          <button className="btnColor" onClick={() => applyStyle("italic")}>
+
+          <button
+            className="btnColor"
+            onClick={applyItalicStyle}
+            style={{ fontStyle: isItalic ? "italic" : "normal" }}
+          >
             <FaItalic />
           </button>
-          <button className="btnColor" onClick={() => applyStyle("underline")}>
+
+          <button
+            className="btnColor"
+            onClick={applyUnderlineStyle}
+            style={{ textDecoration: isUnderlined ? "underline" : "none" }}
+          >
             <FaUnderline />
           </button>
-          <button className="btnColor" onClick={handleLink}>
-            <ImLink />
-          </button>
+
           <button
             className="btnColor"
             onClick={handleFontColorClick}
@@ -200,8 +266,7 @@ function App() {
         <div
           id="editor"
           contentEditable={true}
-          style={{ fontSize, display: showContentInConsole ? "none" : "block" }}
-          dangerouslySetInnerHTML={{ __html: generarContenido() }}
+          style={{ textAlign: alignment }}
           onKeyDown={handleEnter}
           onInput={(e) => handleContentChange(e, paragraphs.length - 1)}
         ></div>
