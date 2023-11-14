@@ -82,11 +82,20 @@ function App() {
     applyBackendStyle("changeTextBackgroundColor", { backgroundColor: color });
   };
   // Funcion para cambiar el tamaño de fuente
+  // Funcion para cambiar el tamaño de fuente
   const handleFontSizeChange = (e) => {
-    const newSize = e.target.value + "pt";
+    const newSize = parseInt(e.target.value) + "pt";
     setFontSize(newSize);
     applyBackendStyle("changeTextSize", { size: newSize });
+
+    // Aplicar el cambio de tamaño directamente al contenido editable
+    const editor = document.getElementById("editor");
+    if (editor) {
+      editor.style.fontSize = newSize;
+    }
   };
+
+
 
   return (
     <div className="App">
