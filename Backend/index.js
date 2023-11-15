@@ -3,8 +3,6 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
 let textAlignment = 'left'; // Variable global para almacenar la alineación del texto
-let textColor = 'black'; // Variable global para almacenar el color del texto
-let textBackgroundColor = 'white'; // Variable global para almacenar el color de fondo del texto
 app.use(cors());
 app.use(express.json());
 
@@ -42,13 +40,12 @@ app.post('/api/changeTextUnderline', (req, res) => {
   res.json({ success: true, message: 'Texto subrayado cambiado exitosamente', underline: underline });
 });
 
-
-
 app.post('/api/changeTextColor', (req, res) => {
   const { textColor } = req.body;
   console.log('Texto con nuevo color:', textColor);
   res.json({ success: true, message: 'Color del texto cambiado exitosamente' });
 });
+
 
 app.post('/api/changeTextBackgroundColor', (req, res) => {
   const { backgroundColor } = req.body;

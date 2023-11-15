@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import {FaAlignLeft,FaAlignCenter,FaAlignRight,FaBold,FaItalic,FaUnderline} from "react-icons/fa";
+import { ChromePicker } from "react-color"; // Importa el componente de paleta de colores
 
 function App() {
   const [fontColor, setFontColor] = useState("#3c8dbc");
   const [backColor, setBackColor] = useState("orange");
-  const [fontSize, setFontSize] = useState("12px");
+  const [fontSize, setFontSize] = useState("16px");
   const [paragraphs, setParagraphs] = useState([{ id: 0, content: "" }]);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderlined, setIsUnderlined] = useState(false);
   const [alignment, setAlignment] = useState("left");
+
+  const [showFontColorPicker, setShowFontColorPicker] = useState(false);
+  const [showBackColorPicker, setShowBackColorPicker] = useState(false);
 
   // Funcion para aplicar estilos al texto
   const applyBackendStyle = async (endpoint, data) => {
@@ -69,19 +73,33 @@ function App() {
     applyStyleToContentEditable("underline");
     setIsUnderlined(!isUnderlined);
   };
-  // Funcion para cambiar el color de fuente
-  const handleFontColorClick = () => {
-    const color = prompt("Introduce el color de fuente:", "#3c8dbc");
-    setFontColor(color);
-    applyBackendStyle("changeTextColor", { color: color });
+  // Función para abrir/cerrar el selector de color de fuente
+  const handleFontColorPickerToggle = () => {
+    setShowFontColorPicker(!showFontColorPicker);
   };
-  // Funcion para cambiar el color de fondo
-  const handleBackColorClick = () => {
-    const color = prompt("Introduce el color de fondo:", "orange");
-    setBackColor(color);
-    applyBackendStyle("changeTextBackgroundColor", { backgroundColor: color });
+
+  // Función para abrir/cerrar el selector de color de fondo
+  const handleBackColorPickerToggle = () => {
+    setShowBackColorPicker(!showBackColorPicker);
   };
-  // Funcion para cambiar el tamaño de fuente
+
+  // Función para aplicar el color de fuente seleccionado
+const handleFontColorChange = (color) => {
+  const newFontColor = color.hex;
+  setFontColor(newFontColor);
+  document.execCommand("foreColor", false, newFontColor);
+  applyBackendStyle("changeTextColor", { textColor: newFontColor });
+};
+
+
+  // Función para aplicar el color de fondo seleccionado
+  const handleBackColorChange = (color) => {
+    const newBackColor = color.hex;
+    setBackColor(newBackColor);
+    document.execCommand("hiliteColor", false, newBackColor);
+    setBackColor(newBackColor);
+  };
+
   // Funcion para cambiar el tamaño de fuente
   const handleFontSizeChange = (e) => {
     const newSize = parseInt(e.target.value) + "pt";
@@ -94,6 +112,8 @@ function App() {
       editor.style.fontSize = newSize;
     }
   };
+
+  
 
 
 
@@ -146,18 +166,26 @@ function App() {
 
           <button
             className="btnColor"
-            onClick={handleFontColorClick}
+            onClick={handleFontColorPickerToggle}
             style={{ color: fontColor }}
           >
             <span>F</span>
           </button>
+          {showFontColorPicker && (
+            <ChromePicker color={fontColor} onChange={handleFontColorChange} />
+          )}
+
           <button
             className="btnColor"
-            onClick={handleBackColorClick}
+            onClick={handleBackColorPickerToggle}
             style={{ backgroundColor: backColor }}
           >
             <span>B</span>
           </button>
+          {showBackColorPicker && (
+            <ChromePicker color={backColor} onChange={handleBackColorChange} />
+          )}
+
           <button
             className="jscolor"
             style={{
@@ -168,11 +196,11 @@ function App() {
             }}
           ></button>
           <select id="inputFontSize" onChange={handleFontSizeChange}>
-            <option value="10">10 pt</option>
-            <option value="12">12 pt</option>
-            <option value="14">14 pt</option>
-            <option value="16">16 pt</option>
-            <option value="18">18 pt</option>
+            <option value="10">12 pt</option>
+            <option value="12">16 pt</option>
+            <option value="14">18 pt</option>
+            <option value="16">20 pt</option>
+            <option value="18">24 pt</option>
           </select>
         </div>
 
