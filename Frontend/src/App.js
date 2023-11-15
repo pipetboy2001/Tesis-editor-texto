@@ -6,7 +6,7 @@ function App() {
   const [fontColor, setFontColor] = useState("#3c8dbc");
   const [backColor, setBackColor] = useState("orange");
   const [fontSize, setFontSize] = useState("16px");
-  const [paragraphs, setParagraphs] = useState([{ id: 0, content: "" }]);
+
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderlined, setIsUnderlined] = useState(false);
@@ -113,34 +113,33 @@ const handleFontColorChange = (color) => {
     }
   };
 
-  
-// Agrega esta función dentro de tu componente funcional App
-const showFormatMarks = () => {
-  const editor = document.getElementById("editor");
-  if (editor) {
-    const content = editor.innerHTML;
-    
-    // Reemplaza los saltos de línea con un símbolo específico
-    const formattedContent = content.replace(/<div>/g, "¶");
-
-    // Muestra el contenido con marcas de formato en la consola
-    console.log(formattedContent);
-  }
-};
-
-// Agrega esta función para manejar el botón de mostrar marcas de formato
-const handleShowFormatMarks = () => {
+// Función para mostrar marcas de formato en la consola
+  const showFormatMarks = () => {
+    const editor = document.getElementById("editor");
+    if (editor) {
+      const content = editor.innerHTML;
+      const paragraphs = content.split('<div>').map(paragraph => paragraph.trim());
+      const nonEmptyParagraphs = paragraphs.filter(paragraph => paragraph !== '');
+      const formattedContent = nonEmptyParagraphs.map(paragraph => `<div>${paragraph}¶<br></div>`).join('');
+      console.log(formattedContent);
+      const metadata = nonEmptyParagraphs.map((paragraph, index) => ({
+        id: index,
+        content: paragraph.replace(/\u00a0/g, '').trim() // Elimina los espacios no deseados
+      }));
+      console.log(metadata);
+    }
+  };
   showFormatMarks();
 
-  // Enfoca el editor para que el usuario pueda seguir escribiendo
-  const editor = document.getElementById("editor");
-  if (editor) {
-    editor.focus();
-  }
-}
-
-
-
+  // Agrega esta función para manejar el botón de mostrar marcas de formato
+  const handleShowFormatMarks = () => {
+    showFormatMarks();
+    // Enfoca el editor para que el usuario pueda seguir escribiendo
+    const editor = document.getElementById("editor");
+    if (editor) {
+      editor.focus();
+    }
+  };
 
   return (
     <div className="App">
@@ -220,6 +219,9 @@ const handleShowFormatMarks = () => {
               outline: "none",
             }}
           ></button>
+          <button onClick={handleShowFormatMarks}>¶</button>
+
+
           <select id="inputFontSize" onChange={handleFontSizeChange}>
             <option value="10">12 pt</option>
             <option value="12">16 pt</option>
@@ -228,12 +230,6 @@ const handleShowFormatMarks = () => {
             <option value="18">24 pt</option>
           </select>
         </div>
-
-        <div id="painelEditor">
-          <button onClick={handleShowFormatMarks}>¶</button>
-        </div>
-
-
 
         <div
           id="editor"
