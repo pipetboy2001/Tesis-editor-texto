@@ -6,11 +6,13 @@ function App() {
   const [fontColor, setFontColor] = useState("#3c8dbc");
   const [backColor, setBackColor] = useState("orange");
   const [fontSize, setFontSize] = useState("16px");
-
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderlined, setIsUnderlined] = useState(false);
   const [alignment, setAlignment] = useState("left");
+
+    const [paragraphs, setParagraphs] = useState([{ id: 0, content: "", text: "" }]);
+
 
   const [showFontColorPicker, setShowFontColorPicker] = useState(false);
   const [showBackColorPicker, setShowBackColorPicker] = useState(false);
@@ -114,22 +116,42 @@ const handleFontColorChange = (color) => {
   };
 
 // Función para mostrar marcas de formato en la consola
-  const showFormatMarks = () => {
-    const editor = document.getElementById("editor");
-    if (editor) {
-      const content = editor.innerHTML;
-      const paragraphs = content.split('<div>').map(paragraph => paragraph.trim());
-      const nonEmptyParagraphs = paragraphs.filter(paragraph => paragraph !== '');
-      const formattedContent = nonEmptyParagraphs.map(paragraph => `<div>${paragraph}¶<br></div>`).join('');
-      console.log(formattedContent);
-      const metadata = nonEmptyParagraphs.map((paragraph, index) => ({
-        id: index,
-        content: paragraph.replace(/\u00a0/g, '').trim() // Elimina los espacios no deseados
-      }));
-      console.log(metadata);
-    }
-  };
-  showFormatMarks();
+const showFormatMarks = () => {
+  const editor = document.getElementById("editor");
+  if (editor) {
+    const content = editor.innerHTML;
+
+    // Dividir el contenido en párrafos utilizando saltos de línea como delimitadores
+    const paragraphs = content.split('<div>').map(paragraph => paragraph.trim());
+
+    // Filtrar los párrafos vacíos
+    const nonEmptyParagraphs = paragraphs.filter(paragraph => paragraph !== '');
+
+    // Formato con los elementos </div>¶<br> y botón para cada párrafo
+    const formattedContent = nonEmptyParagraphs.map((paragraph, index) => {
+      return `<div>${paragraph}¶<br>`;
+    }).join('');
+
+    // Mostrar el formato con los elementos </div>¶<br>
+    console.log(formattedContent);
+
+    // Formato del array de objetos
+    const metadata = nonEmptyParagraphs.map((paragraph, index) => ({
+      id: index,
+      content: paragraph.replace(/\u00a0/g, '').trim(),
+      text: '' // Inicializar el texto libre como cadena vacía
+    }));
+
+    // Muestra el array de objetos en la consola
+    console.log(metadata);
+
+    // Actualizar el estado de los párrafos en React
+    setParagraphs(metadata);
+  }
+};
+
+
+
 
   // Agrega esta función para manejar el botón de mostrar marcas de formato
   const handleShowFormatMarks = () => {
