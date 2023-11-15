@@ -114,6 +114,31 @@ const handleFontColorChange = (color) => {
   };
 
   
+// Agrega esta función dentro de tu componente funcional App
+const showFormatMarks = () => {
+  const editor = document.getElementById("editor");
+  if (editor) {
+    const content = editor.innerHTML;
+    
+    // Reemplaza los saltos de línea con un símbolo específico
+    const formattedContent = content.replace(/<div>/g, "¶");
+
+    // Muestra el contenido con marcas de formato en la consola
+    console.log(formattedContent);
+  }
+};
+
+// Agrega esta función para manejar el botón de mostrar marcas de formato
+const handleShowFormatMarks = () => {
+  showFormatMarks();
+
+  // Enfoca el editor para que el usuario pueda seguir escribiendo
+  const editor = document.getElementById("editor");
+  if (editor) {
+    editor.focus();
+  }
+}
+
 
 
 
@@ -203,6 +228,12 @@ const handleFontColorChange = (color) => {
             <option value="18">24 pt</option>
           </select>
         </div>
+
+        <div id="painelEditor">
+          <button onClick={handleShowFormatMarks}>¶</button>
+        </div>
+
+
 
         <div
           id="editor"
