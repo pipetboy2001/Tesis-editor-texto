@@ -116,7 +116,7 @@ const handleFontColorChange = (color) => {
   };
 
 // Función para mostrar marcas de formato en la consola
-const showFormatMarks = () => {
+/*const showFormatMarks = () => {
   const editor = document.getElementById("editor");
   if (editor) {
     const content = editor.innerHTML;
@@ -142,14 +142,165 @@ const showFormatMarks = () => {
       text: '' // Inicializar el texto libre como cadena vacía
     }));
 
-    // Muestra el array de objetos en la consola
+    console.log(metadata);
+
+    // Actualizar el estado de los párrafos en React
+    setParagraphs(metadata);
+  }
+};*/
+
+// Función para mostrar marcas de formato en la consola
+/*const showFormatMarks = () => {
+  const editor = document.getElementById("editor");
+  if (editor) {
+    const paragraphs = Array.from(editor.children);
+
+    // Filtrar los párrafos vacíos
+    const nonEmptyParagraphs = paragraphs.filter(paragraph => paragraph.innerHTML.trim() !== '');
+
+    // Obtener el contenido de cada párrafo
+    const paragraphContents = nonEmptyParagraphs.map(paragraph => paragraph.innerText);
+
+    // Mostrar el contenido de los párrafos
+    console.log(paragraphContents);
+
+    // Formato del array de objetos
+    const metadata = paragraphContents.map((content, index) => ({
+      id: index,
+      content: content.replace(/\u00a0/g, '').trim(),
+      text: '' // Inicializar el texto libre como cadena vacía
+    }));
+
     console.log(metadata);
 
     // Actualizar el estado de los párrafos en React
     setParagraphs(metadata);
   }
 };
+*/
 
+
+/*
+const showFormatMarks = () => {
+  const editor = document.getElementById("editor");
+  if (editor) {
+    const content = editor.innerHTML;
+
+    // Utilizar un elemento temporario para parsear el contenido HTML
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = content;
+
+    // Obtener todos los elementos span dentro del editor
+    const spans = tempElement.querySelectorAll('span');
+
+    // Obtener el texto de cada span y formatear el contenido
+    const formattedContent = Array.from(spans).map(span => span.textContent).join('¶<br>');
+
+    // Mostrar el formato con los elementos ¶<br>
+    console.log(formattedContent);
+
+    // Formato del array de objetos
+    const metadata = Array.from(spans).map((span, index) => ({
+      id: index,
+      content: span.textContent.replace(/\u00a0/g, '').trim(),
+      text: '' // Inicializar el texto libre como cadena vacía
+    }));
+
+    console.log(metadata);
+
+    // Actualizar el estado de los párrafos en React
+    setParagraphs(metadata);
+  }
+};*/
+
+// CASI FUNCIONA
+const showFormatMarks = () => {
+  const editor = document.getElementById("editor");
+  if (editor) {
+    const content = editor.innerHTML;
+
+    // Envolver el contenido en un div si no está ya envuelto
+    const wrappedContent = content.startsWith('<div>') ? content : `<div>${content}</div>`;
+
+    // Utilizar un elemento temporario para parsear el contenido HTML
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = wrappedContent;
+
+    // Obtener todos los elementos div y span dentro del editor
+    const divs = tempElement.querySelectorAll('div');
+    const spans = tempElement.querySelectorAll('span');
+
+    let formattedContent;
+    let metadata;
+
+    if (divs.length > 0) {
+      // Para elementos de tipo div
+      const firstParagraph = divs[0].innerText.trim();
+      const restParagraphs = Array.from(divs).slice(1).map(paragraph => paragraph.innerText.trim());
+
+      formattedContent = firstParagraph + '¶<br>' + restParagraphs.join('¶<br>');
+      
+      // Eliminar "estoesprueba" del primer párrafo si está presente
+      if (firstParagraph.includes('estoesprueba')) {
+        const modifiedFirstParagraph = firstParagraph.replace('estoesprueba', '').trim();
+        formattedContent = modifiedFirstParagraph + '¶<br>' + restParagraphs.join('¶<br>');
+        metadata = [{
+          id: 0,
+          content: modifiedFirstParagraph.replace(/\u00a0/g, '').trim(),
+          text: ''
+        }, ...restParagraphs.map((content, index) => ({
+          id: index + 1,
+          content: content.replace(/\u00a0/g, '').trim(),
+          text: ''
+        }))];
+      } else {
+        metadata = [{
+          id: 0,
+          content: firstParagraph.replace(/\u00a0/g, '').trim(),
+          text: ''
+        }, ...restParagraphs.map((content, index) => ({
+          id: index + 1,
+          content: content.replace(/\u00a0/g, '').trim(),
+          text: ''
+        }))];
+      }
+    } else if (spans.length > 0) {
+      // Para elementos de tipo span
+      const spanTexts = Array.from(spans).map(span => span.innerText.trim());
+      formattedContent = spanTexts.join('¶<br>');
+
+      // Si hay texto directo en el editor, agregarlo al inicio
+      if (tempElement.firstChild && tempElement.firstChild.nodeType === 3) {
+        const directText = tempElement.firstChild.textContent.trim();
+        formattedContent = directText + '¶<br>' + formattedContent;
+        metadata = [{
+          id: 0,
+          content: directText.replace(/\u00a0/g, '').trim(),
+          text: ''
+        }, ...spanTexts.map((content, index) => ({
+          id: index + 1,
+          content: content.replace(/\u00a0/g, '').trim(),
+          text: ''
+        }))];
+      } else {
+        metadata = spanTexts.map((content, index) => ({
+          id: index,
+          content: content.replace(/\u00a0/g, '').trim(),
+          text: ''
+        }));
+      }
+    }
+
+    // Mostrar el formato con los elementos ¶<br>
+    console.log(formattedContent);
+
+    // Mostrar el array de objetos
+    console.log(metadata);
+
+    // Actualizar el estado de los párrafos en React
+    setParagraphs(metadata);
+  }
+};
 
 
 
