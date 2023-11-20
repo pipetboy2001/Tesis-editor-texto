@@ -1,21 +1,30 @@
 import React, { useState } from "react";
-import {FaAlignLeft,FaAlignCenter,FaAlignRight,FaBold,FaItalic,FaUnderline} from "react-icons/fa";
+import {
+  FaAlignLeft,
+  FaAlignCenter,
+  FaAlignRight,
+  FaBold,
+  FaItalic,
+  FaUnderline,
+} from "react-icons/fa";
 import { ChromePicker } from "react-color"; // Importa el componente de paleta de colores
 
 function App() {
   const [fontColor, setFontColor] = useState("#3c8dbc");
   const [backColor, setBackColor] = useState("orange");
-  const [fontSize, setFontSize] = useState("16px");
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderlined, setIsUnderlined] = useState(false);
   const [alignment, setAlignment] = useState("left");
-
-    const [paragraphs, setParagraphs] = useState([{ id: 0, content: "", text: "" }]);
-
-
   const [showFontColorPicker, setShowFontColorPicker] = useState(false);
   const [showBackColorPicker, setShowBackColorPicker] = useState(false);
+  /* eslint-disable no-unused-vars */
+  const [fontSize, setFontSize] = useState("16px");
+  const [paragraphs, setParagraphs] = useState([
+    { id: 0, content: "", text: "" },
+  ]);
+
+  
 
   // Funcion para aplicar estilos al texto
   const applyBackendStyle = async (endpoint, data) => {
@@ -86,13 +95,12 @@ function App() {
   };
 
   // Función para aplicar el color de fuente seleccionado
-const handleFontColorChange = (color) => {
-  const newFontColor = color.hex;
-  setFontColor(newFontColor);
-  document.execCommand("foreColor", false, newFontColor);
-  applyBackendStyle("changeTextColor", { textColor: newFontColor });
-};
-
+  const handleFontColorChange = (color) => {
+    const newFontColor = color.hex;
+    setFontColor(newFontColor);
+    document.execCommand("foreColor", false, newFontColor);
+    applyBackendStyle("changeTextColor", { textColor: newFontColor });
+  };
 
   // Función para aplicar el color de fondo seleccionado
   const handleBackColorChange = (color) => {
@@ -115,69 +123,45 @@ const handleFontColorChange = (color) => {
     }
   };
 
-// Función para mostrar marcas de formato en la consola
-const showFormatMarks = () => {
-  const editor = document.getElementById("editor");
-  if (editor) {
-    const content = editor.innerHTML;
-
-    // Utilizar un elemento temporario para parsear el contenido HTML
-    const tempElement = document.createElement('div');
-    tempElement.innerHTML = content;
-
-    // Obtener todos los elementos div y span dentro del editor
-    const elements = tempElement.childNodes;
-
-    let metadata = [];
-    let currentParagraph = '';
-
-    elements.forEach((element, index) => {
-      const text = getInnerText(element);
-      if (text) {
-        if (currentParagraph !== '') {
-          // Agregar el párrafo anterior
-          metadata.push({
-            id: index - 1,
-            content: currentParagraph.replace(/\u00a0/g, '').trim(),
-            text: '',
-          });
+  // Función para mostrar marcas de formato en la consola
+  const showFormatMarks = () => {
+    const editor = document.getElementById("editor");
+    if (editor) {
+      const content = editor.innerHTML;
+      // Convertir el contenido HTML a un array de objetos
+      const tempElement = document.createElement("div");
+      tempElement.innerHTML = content;
+      const elements = tempElement.childNodes;
+      let metadata = [];
+      let currentParagraph = "";
+      // Recorrer el array de objetos
+      elements.forEach((element, index) => {
+        const text = getInnerText(element);
+        if (text) {
+          if (currentParagraph !== "") {
+            metadata.push({
+              id: index - 1,
+              content: currentParagraph.replace(/\u00a0/g, "").trim(),
+              text: "",
+            });
+          }
+          currentParagraph = text.replace(/\u00a0/g, "").trim();
         }
-        // Iniciar nuevo párrafo
-        currentParagraph = text.replace(/\u00a0/g, '').trim();
-      }
-    });
-
-    // Agregar el último párrafo si hay uno
-    if (currentParagraph !== '') {
-      metadata.push({
-        id: elements.length - 1,
-        content: currentParagraph,
-        text: '',
       });
+      // Añadir el último párrafo
+      if (currentParagraph !== "") {
+        metadata.push({
+          id: elements.length - 1,
+          content: currentParagraph,
+          text: "",
+        });
+      }
+      // Actualizar el estado de los párrafos en React
+      setParagraphs(metadata);
+      // Mostrar el array de objetos
+      console.log(metadata);
     }
-
-    // Mostrar el array de objetos
-    console.log(metadata);
-
-    // Actualizar el estado de los párrafos en React
-    setParagraphs(metadata);
-  }
-};
-
-const getInnerText = (element) => {
-  if (element.nodeType === 3) {
-    return element.textContent;
-  } else if (element.nodeType === 1) {
-    let text = '';
-    for (let child of element.childNodes) {
-      text += getInnerText(child);
-    }
-    return text;
-  }
-  return '';
-};
-
-
+  };
 
   // Agrega esta función para manejar el botón de mostrar marcas de formato
   const handleShowFormatMarks = () => {
@@ -187,6 +171,76 @@ const getInnerText = (element) => {
     if (editor) {
       editor.focus();
     }
+  };
+
+  // Función para obtener el texto de un elemento
+  const getInnerText = (element) => {
+    if (element.nodeType === 3) {
+      return element.textContent;
+    } else if (element.nodeType === 1) {
+      let text = "";
+      for (let child of element.childNodes) {
+        text += getInnerText(child);
+      }
+      return text;
+    }
+    return "";
+  };
+
+  // Función para guardar los párrafos en un archivo JSON
+  const guardarParrafos = () => {
+    showFormatMarks(); // Actualizar el estado de los párrafos antes de guardar
+    const editor = document.getElementById("editor");
+    if (editor) {
+      const content = editor.innerHTML;
+      const tempElement = document.createElement("div");
+      tempElement.innerHTML = content;
+
+      const elements = tempElement.childNodes;
+
+      let metadata = [];
+      let currentParagraph = "";
+
+      elements.forEach((element, index) => {
+        const text = getInnerText(element);
+        if (text) {
+          if (currentParagraph !== "") {
+            metadata.push({
+              id: index - 1,
+              content: currentParagraph.replace(/\u00a0/g, "").trim(),
+              text: "",
+            });
+          }
+          currentParagraph = text.replace(/\u00a0/g, "").trim();
+        }
+      });
+
+      if (currentParagraph !== "") {
+        metadata.push({
+          id: elements.length - 1,
+          content: currentParagraph,
+          text: "",
+        });
+      }
+      console.log(metadata);
+      // Convertir el array de objetos a formato JSON
+      const jsonString = JSON.stringify(metadata, null, 2);
+      console.log(jsonString);
+      // Guardar el JSON como un archivo
+      descargarJSON(jsonString, "parrafos.json");
+    }
+  };
+
+  // Función para descargar un archivo JSON
+  const descargarJSON = (data, filename) => {
+    const blob = new Blob([data], { type: "application/json" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   return (
@@ -269,6 +323,7 @@ const getInnerText = (element) => {
           ></button>
           <button onClick={handleShowFormatMarks}>¶</button>
 
+          <button onClick={guardarParrafos}>Guardar</button>
 
           <select id="inputFontSize" onChange={handleFontSizeChange}>
             <option value="10">12 pt</option>
