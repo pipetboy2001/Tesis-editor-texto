@@ -1,0 +1,13 @@
+.text-editor {
+    display: flex;
+    flex-direction: row;
+  }
+
+  #editor {
+    flex: 1;
+    margin-left: 1%;
+    margin-right: 1%; /* Agrega un margen derecho del 5% */
+    border: 1px solid #ccc;
+    min-height: 200px;
+  }
+  
