@@ -9,12 +9,19 @@ import {
 } from "react-icons/fa";
 import "./Styles/Text.css";
 
+import { Modal, Button } from "react-bootstrap";
+
 function App() {
   const [texts, setTexts] = useState([]);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderlined, setIsUnderlined] = useState(false);
   const [paragraphNumbers, setParagraphNumbers] = useState([]);
+
+  const [showModal, setShowModal] = useState(false);
+
+  const handleModalClose = () => setShowModal(false);
+  const handleModalShow = () => setShowModal(true);
 
   // Funcion para aplicar estilos al texto
   const applyStyleToContentEditable = (style, value) => {
@@ -96,21 +103,20 @@ function App() {
       .then((response) => response.json())
       .then((data) => {
         setTexts(data.texts);
-  
+
         // Inicializar los números de párrafo
         const paragraphNumbersArray = Array.from(
           { length: data.texts.length },
           (_, i) => i + 1
         );
-  
+
         setParagraphNumbers(paragraphNumbersArray);
-  
+
         // Mostrar marcas de formato después de cargar los textos
         showFormatMarks();
       })
       .catch((error) => console.error("Error al obtener textos: ", error));
   }, []);
-  
 
   // Función para mostrar marcas de formato en la consola
   const showFormatMarks = () => {
@@ -248,7 +254,11 @@ function App() {
               </div>
 
               <div className="editor-de-texto">
-                <div id="paragraphButtons" className="paragraph-buttons"></div>
+                <div
+                  id="paragraphButtons"
+                  className="paragraph-buttons"
+                  onClick={handleModalShow}
+                ></div>
 
                 <div
                   contentEditable={true}
@@ -273,6 +283,24 @@ function App() {
             </div>
           ))}
         </div>
+
+        <Modal show={showModal} onHide={handleModalClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Opciones</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {/* Contenido del modal */}
+            <Button variant="secondary">Opción 1</Button>
+            <Button variant="secondary">Opción 2</Button>
+            <Button variant="secondary">Opción 3</Button>
+            <Button variant="secondary">Opción 4</Button>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={handleModalClose}>
+              Cerrar
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
       <div></div>
     </div>
