@@ -149,7 +149,36 @@ function App() {
 
       // Actualizar el estado con los IDs de párrafo
       setParagraphNumbers(metadata.map((item) => item.id));
-      console.log(metadata);
+      console.log("Marcas de formato:", metadata);
+      // Crear botones para cada párrafo
+      const buttonsContainer = document.getElementById("paragraphButtons");
+      if (buttonsContainer) {
+        buttonsContainer.innerHTML = "";
+        metadata.forEach((item) => {
+          const button = document.createElement("button");
+          button.innerText = item.id + 1; // Sumar 1 para empezar desde 1 en lugar de 0
+          button.addEventListener("click", () =>
+            handleParagraphButtonClick(item.id)
+          );
+          buttonsContainer.appendChild(button);
+        });
+      }
+    }
+  };
+
+  const handleParagraphButtonClick = (paragraphId) => {
+    // Enfoca el editor y selecciona el párrafo correspondiente
+    const editor = document.getElementById("editor");
+    if (editor) {
+      const paragraphs = editor.getElementsByClassName("text-editor");
+      if (paragraphs.length > paragraphId) {
+        paragraphs[paragraphId].focus();
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(paragraphs[paragraphId]);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
   };
 
@@ -217,18 +246,24 @@ function App() {
                 </button>
                 <button onClick={handleShowFormatMarks}>¶</button>
               </div>
-              <div
-                contentEditable={true}
-                className="text-editor"
-                style={{
-                  textAlign: text.alineacion || "left",
-                  fontWeight: text.bold ? "bold" : "normal",
-                  fontStyle: text.italic ? "italic" : "normal",
-                  textDecoration: text.underline ? "underline" : "none",
-                }}
-              >
-                {text.contenido}
+
+              <div className="editor-de-texto">
+                <div id="paragraphButtons" className="paragraph-buttons"></div>
+
+                <div
+                  contentEditable={true}
+                  className="text-editor"
+                  style={{
+                    textAlign: text.alineacion || "left",
+                    fontWeight: text.bold ? "bold" : "normal",
+                    fontStyle: text.italic ? "italic" : "normal",
+                    textDecoration: text.underline ? "underline" : "none",
+                  }}
+                >
+                  {text.contenido}
+                </div>
               </div>
+
               <button
                 className="Boton-guardar"
                 onClick={() => handleSaveClick(text._id)}

@@ -34,3 +34,21 @@
   display: inline-block;
   width: 1em;
 }
+
+.editor-de-texto {
+  display: flex;
+  align-items: flex-start;
+}
+
+.paragraph-buttons {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px; /* Ajusta el margen derecho según tus necesidades */
+  
+
+}
+
+.text-editor {
+  flex-grow: 1;
+  /* Otros estilos que ya tienes... */
+}
