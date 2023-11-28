@@ -7,7 +7,6 @@ import {
   FaItalic,
   FaUnderline,
 } from "react-icons/fa";
-import { ChromePicker } from "react-color"; // Importa el componente de paleta de colores
 import "./Styles/Text.css";
 
 function App() {
@@ -15,22 +14,6 @@ function App() {
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderlined, setIsUnderlined] = useState(false);
-
-  //const heredados
-  const [fontColor, setFontColor] = useState("#3c8dbc");
-  const [backColor, setBackColor] = useState("orange");
-  const [showFontColorPicker, setShowFontColorPicker] = useState(false);
-  const [showBackColorPicker, setShowBackColorPicker] = useState(false);
-  const [currentParagraphNumber, setCurrentParagraphNumber] = useState(1);
-  /* eslint-disable no-unused-vars */
-  const [text, setText] = useState({
-    contenido: "",
-    alineacion: "",
-    bold: false,
-    italic: false,
-    underline: false,
-  });
-  const [fontSize, setFontSize] = useState("16px");
 
   // Funcion para aplicar estilos al texto
   const applyStyleToContentEditable = (style, value) => {
@@ -72,7 +55,6 @@ function App() {
     try {
       // Obtener el texto específico
       const textToUpdate = texts.find((text) => text._id === textId);
-
       // Verificar si hay cambios en la alineación
       if (textToUpdate && textToUpdate.alineacion) {
         // Enviar la actualización al servidor
@@ -94,7 +76,6 @@ function App() {
             `Error al enviar la actualización: ${response.statusText}`
           );
         }
-
         console.log("Actualización enviada con éxito.");
       }
     } catch (error) {
@@ -117,7 +98,6 @@ function App() {
     if (editor) {
       const cards = editor.getElementsByClassName("card");
       let metadata = [];
-
       Array.from(cards).forEach((card, index) => {
         const textEditor = card.querySelector("[contenteditable='true']");
         if (textEditor) {
@@ -129,11 +109,9 @@ function App() {
             }
             return "";
           });
-
           const filteredParagraphs = paragraphs.filter(
             (paragraph) => paragraph !== ""
           );
-
           filteredParagraphs.forEach((paragraph, paragraphIndex) => {
             const currentParagraphObj = {
               id: index * filteredParagraphs.length + paragraphIndex,
@@ -146,8 +124,6 @@ function App() {
           });
         }
       });
-
-      setTexts(metadata);
       console.log(metadata);
     }
   };
@@ -157,25 +133,12 @@ function App() {
     // Enfoca el editor para que el usuario pueda seguir escribiendo
     const editor = document.getElementById("editor");
     if (editor) {
+      console.log("Mostrando marcas de formato...");
       showFormatMarks();
       editor.focus();
     } else {
       console.error("Elemento con ID 'editor' no encontrado en el DOM.");
     }
-  };
-
-  // Función para obtener el texto de un elemento
-  const getInnerText = (element) => {
-    if (element.nodeType === 3) {
-      return element.textContent;
-    } else if (element.nodeType === 1) {
-      let text = "";
-      for (let child of element.childNodes) {
-        text += getInnerText(child);
-      }
-      return text;
-    }
-    return "";
   };
 
   return (
@@ -241,11 +204,17 @@ function App() {
               >
                 {text.contenido}
               </div>
-              <button className="Boton-guardar" onClick={() => handleSaveClick(text._id)}>Guardar</button>
+              <button
+                className="Boton-guardar"
+                onClick={() => handleSaveClick(text._id)}
+              >
+                Guardar
+              </button>
             </div>
           ))}
         </div>
       </div>
+      <div></div>
     </div>
   );
 }
