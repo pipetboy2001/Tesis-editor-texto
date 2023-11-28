@@ -1,0 +1,20 @@
+#parentEditor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ajusta la altura según tus necesidades */
+}
+
+#editor {
+  width: 80%; /* Ajusta el ancho según tus necesidades */
+  max-width: 800px; /* Establece un ancho máximo para evitar que el editor sea demasiado ancho */
+  border: 1px solid #ddd; /* Agrega un borde para resaltar el área del editor */
+  padding: 20px; /* Ajusta el relleno según tus necesidades */
+  overflow-y: auto; /* Agrega un desplazamiento vertical si el contenido es demasiado largo */
+}
+.text-editor {
+  margin-top: 10px; /* Ajusta el margen superior según tus necesidades */
+  padding: 10px; /* Ajusta el relleno según tus necesidades */
+  border: 1px solid #ddd; /* Agrega un borde para resaltar el área del texto */
+  min-height: 100px; /* Establece una altura mínima para el cuadro de texto */
+}
