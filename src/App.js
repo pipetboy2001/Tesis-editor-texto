@@ -14,6 +14,7 @@ function App() {
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderlined, setIsUnderlined] = useState(false);
+  const [paragraphNumbers, setParagraphNumbers] = useState([]);
 
   // Funcion para aplicar estilos al texto
   const applyStyleToContentEditable = (style, value) => {
@@ -29,6 +30,13 @@ function App() {
       setTexts((prevTexts) =>
         prevTexts.map((text) =>
           text._id === textId ? { ...text, alineacion: newAlignment } : text
+        )
+      );
+
+      // Actualizar los números de párrafo
+      setParagraphNumbers((prevNumbers) =>
+        prevNumbers.map((number, index) =>
+          index === textId ? number + 1 : number
         )
       );
     } catch (error) {
@@ -88,9 +96,21 @@ function App() {
       .then((response) => response.json())
       .then((data) => {
         setTexts(data.texts);
+  
+        // Inicializar los números de párrafo
+        const paragraphNumbersArray = Array.from(
+          { length: data.texts.length },
+          (_, i) => i + 1
+        );
+  
+        setParagraphNumbers(paragraphNumbersArray);
+  
+        // Mostrar marcas de formato después de cargar los textos
+        showFormatMarks();
       })
       .catch((error) => console.error("Error al obtener textos: ", error));
   }, []);
+  
 
   // Función para mostrar marcas de formato en la consola
   const showFormatMarks = () => {
@@ -98,6 +118,7 @@ function App() {
     if (editor) {
       const cards = editor.getElementsByClassName("card");
       let metadata = [];
+
       Array.from(cards).forEach((card, index) => {
         const textEditor = card.querySelector("[contenteditable='true']");
         if (textEditor) {
@@ -109,21 +130,25 @@ function App() {
             }
             return "";
           });
+
           const filteredParagraphs = paragraphs.filter(
             (paragraph) => paragraph !== ""
           );
+
           filteredParagraphs.forEach((paragraph, paragraphIndex) => {
             const currentParagraphObj = {
               id: index * filteredParagraphs.length + paragraphIndex,
               content: paragraph,
               text: "",
-              number: index * filteredParagraphs.length + paragraphIndex + 1,
             };
 
             metadata.push(currentParagraphObj);
           });
         }
       });
+
+      // Actualizar el estado con los IDs de párrafo
+      setParagraphNumbers(metadata.map((item) => item.id));
       console.log(metadata);
     }
   };

@@ -23,3 +23,14 @@
   margin-top: 10px; /* Ajusta el margen superior según tus necesidades */
 
 }
+
+.text-editor {
+  counter-reset: paragraph;
+}
+
+.text-editor div::before {
+  content: counter(paragraph) ". ";
+  counter-increment: paragraph;
+  display: inline-block;
+  width: 1em;
+}
