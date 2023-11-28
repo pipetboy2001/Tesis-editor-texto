@@ -241,7 +241,7 @@ function App() {
               >
                 {text.contenido}
               </div>
-              <button onClick={() => handleSaveClick(text._id)}>Guardar</button>
+              <button className="Boton-guardar" onClick={() => handleSaveClick(text._id)}>Guardar</button>
             </div>
           ))}
         </div>

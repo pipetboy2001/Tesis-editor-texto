@@ -18,3 +18,8 @@
   border: 1px solid #ddd; /* Agrega un borde para resaltar el área del texto */
   min-height: 100px; /* Establece una altura mínima para el cuadro de texto */
 }
+
+.Boton-guardar {
+  margin-top: 10px; /* Ajusta el margen superior según tus necesidades */
+
+}
