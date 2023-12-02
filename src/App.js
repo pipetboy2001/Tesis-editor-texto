@@ -17,17 +17,32 @@ function App() {
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderlined, setIsUnderlined] = useState(false);
   const [paragraphNumbers, setParagraphNumbers] = useState([]);
+  // Inside your component function
+  const [editableContent, setEditableContent] = useState("");
 
   const [showModal, setShowModal] = useState(false);
 
   const handleModalClose = () => setShowModal(false);
   const handleModalShow = () => setShowModal(true);
 
+  // Update the state when the content changes
+  const handleContentChange = (event) => {
+    setEditableContent(event.target.value);
+  };
+
   // Funcion para aplicar estilos al texto
-  const applyStyleToContentEditable = (style, value) => {
-    document.execCommand("styleWithCSS", null, true);
-    document.execCommand(style, false, value);
-    document.execCommand("styleWithCSS", null, false);
+  const applyStyleToContentEditable = (style, value, textId) => {
+    setTexts((prevTexts) =>
+      prevTexts.map((text) =>
+        text._id === textId ? { ...text, [style]: value } : text
+      )
+    );
+
+    const editor = document.getElementById(`editor-${textId}`);
+    if (editor) {
+      editor.focus();
+      document.execCommand(style, false, value);
+    }
   };
 
   // Función para alinear el texto
@@ -51,27 +66,22 @@ function App() {
     }
   };
 
-  // Funcion para aplicar negrita
-  const applyBoldStyle = () => {
-    applyStyleToContentEditable("bold");
-    setIsBold(!isBold);
-  };
-  // Funcion para aplicar cursiva
-  const applyItalicStyle = () => {
-    applyStyleToContentEditable("italic");
-    setIsItalic(!isItalic);
-  };
-  // Funcion para aplicar subrayado
-  const applyUnderlineStyle = () => {
-    setIsUnderlined(!isUnderlined);
-  };
-
   const handleSaveClick = async (textId) => {
     try {
       // Obtener el texto específico
       const textToUpdate = texts.find((text) => text._id === textId);
-      // Verificar si hay cambios en la alineación
-      if (textToUpdate && textToUpdate.alineacion) {
+      // Verificar si hay cambios en el formato
+      if (textToUpdate) {
+        const requestBody = {
+          alineacion: textToUpdate.alineacion,
+          bold: textToUpdate.bold,
+          italic: textToUpdate.italic,
+          underline: textToUpdate.underline,
+          contenido: textToUpdate.contenido,
+        };
+
+        console.log("RequestBody:", JSON.stringify(requestBody));
+
         // Enviar la actualización al servidor
         const response = await fetch(
           `http://localhost:8000/text/update/${textId}`, // Ajusta la URL según tu API
@@ -80,9 +90,7 @@ function App() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              alineacion: textToUpdate.alineacion,
-            }),
+            body: JSON.stringify(requestBody),
           }
         );
 
@@ -111,9 +119,6 @@ function App() {
         );
 
         setParagraphNumbers(paragraphNumbersArray);
-
-        // Mostrar marcas de formato después de cargar los textos
-        showFormatMarks();
       })
       .catch((error) => console.error("Error al obtener textos: ", error));
   }, []);
@@ -228,28 +233,44 @@ function App() {
                 </button>
                 <button
                   className="btnColor"
-                  onClick={applyBoldStyle}
-                  style={{ fontWeight: isBold ? "bold" : "normal" }}
+                  onClick={() =>
+                    applyStyleToContentEditable("bold", !text.bold, text._id)
+                  }
+                  style={{ fontWeight: text.bold ? "bold" : "normal" }}
                 >
                   <FaBold />
                 </button>
 
                 <button
                   className="btnColor"
-                  onClick={applyItalicStyle}
-                  style={{ fontStyle: isItalic ? "italic" : "normal" }}
+                  onClick={() =>
+                    applyStyleToContentEditable(
+                      "italic",
+                      !text.italic,
+                      text._id
+                    )
+                  }
+                  style={{ fontStyle: text.italic ? "italic" : "normal" }}
                 >
                   <FaItalic />
                 </button>
+
                 <button
                   className="btnColor"
-                  onClick={applyUnderlineStyle}
+                  onClick={() =>
+                    applyStyleToContentEditable(
+                      "underline",
+                      !text.underline,
+                      text._id
+                    )
+                  }
                   style={{
-                    textDecoration: isUnderlined ? "underline" : "none",
+                    textDecoration: text.underline ? "underline" : "none",
                   }}
                 >
                   <FaUnderline />
                 </button>
+
                 <button onClick={handleShowFormatMarks}>¶</button>
               </div>
 
@@ -260,18 +281,21 @@ function App() {
                   onClick={handleModalShow}
                 ></div>
 
-                <div
-                  contentEditable={true}
-                  className="text-editor"
-                  style={{
-                    textAlign: text.alineacion || "left",
-                    fontWeight: text.bold ? "bold" : "normal",
-                    fontStyle: text.italic ? "italic" : "normal",
-                    textDecoration: text.underline ? "underline" : "none",
-                  }}
-                >
-                  {text.contenido}
-                </div>
+<div
+  contentEditable={true}
+  className="text-editor"
+  id={`editor-${text._id}`}
+  style={{
+    textAlign: text.alineacion || "left",
+    fontWeight: text.bold ? "bold" : "normal",
+    fontStyle: text.italic ? "italic" : "normal",
+    textDecoration: text.underline ? "underline" : "none",
+  }}
+  onInput={handleContentChange}
+  dangerouslySetInnerHTML={{ __html: editableContent }}
+/>
+
+
               </div>
 
               <button
