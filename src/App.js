@@ -1,49 +1,15 @@
+// App.js
 import React, { useEffect, useState } from "react";
-import {
-  FaAlignLeft,
-  FaAlignCenter,
-  FaAlignRight,
-  FaBold,
-  FaItalic,
-  FaUnderline,
-} from "react-icons/fa";
-import "./Styles/Text.css";
-
 import { Modal, Button } from "react-bootstrap";
+import TextComponent from "./Components/TextComponent";
 
-function App() {
+const App = () => {
   const [texts, setTexts] = useState([]);
-  const [isBold, setIsBold] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
-  const [isUnderlined, setIsUnderlined] = useState(false);
   const [paragraphNumbers, setParagraphNumbers] = useState([]);
-  // Inside your component function
-  const [editableContent, setEditableContent] = useState("");
-
   const [showModal, setShowModal] = useState(false);
 
   const handleModalClose = () => setShowModal(false);
   const handleModalShow = () => setShowModal(true);
-
-  // Update the state when the content changes
-  const handleContentChange = (event) => {
-    setEditableContent(event.target.value);
-  };
-
-  // Funcion para aplicar estilos al texto
-  const applyStyleToContentEditable = (style, value, textId) => {
-    setTexts((prevTexts) =>
-      prevTexts.map((text) =>
-        text._id === textId ? { ...text, [style]: value } : text
-      )
-    );
-
-    const editor = document.getElementById(`editor-${textId}`);
-    if (editor) {
-      editor.focus();
-      document.execCommand(style, false, value);
-    }
-  };
 
   // Función para alinear el texto
   const handleTextAlignment = async (newAlignment, textId) => {
@@ -65,6 +31,22 @@ function App() {
       console.error("Error al cambiar la alineación:", error.message);
     }
   };
+
+  // Funcion para aplicar estilos al texto
+  const applyStyleToContentEditable = (style, value, textId) => {
+    setTexts((prevTexts) =>
+      prevTexts.map((text) =>
+        text._id === textId ? { ...text, [style]: value } : text
+      )
+    );
+  
+    const editor = document.getElementById(`editor-${textId}`);
+    if (editor) {
+      editor.focus();
+      document.execCommand(style, false, value);
+    }
+  };
+
 
   const handleSaveClick = async (textId) => {
     try {
@@ -106,23 +88,19 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    fetch("http://localhost:8000/text")
-      .then((response) => response.json())
-      .then((data) => {
-        setTexts(data.texts);
-
-        // Inicializar los números de párrafo
-        const paragraphNumbersArray = Array.from(
-          { length: data.texts.length },
-          (_, i) => i + 1
-        );
-
-        setParagraphNumbers(paragraphNumbersArray);
-      })
-      .catch((error) => console.error("Error al obtener textos: ", error));
-  }, []);
-
+  // Agrega esta función para manejar el botón de mostrar marcas de formato
+  const handleShowFormatMarks = () => {
+    // Enfoca el editor para que el usuario pueda seguir escribiendo
+    const editor = document.getElementById("editor");
+    if (editor) {
+      console.log("Mostrando marcas de formato...");
+      showFormatMarks();
+      editor.focus();
+    } else {
+      console.error("Elemento con ID 'editor' no encontrado en el DOM.");
+    }
+  };
+  
   // Función para mostrar marcas de formato en la consola
   const showFormatMarks = () => {
     const editor = document.getElementById("editor");
@@ -193,118 +171,37 @@ function App() {
     }
   };
 
-  // Agrega esta función para manejar el botón de mostrar marcas de formato
-  const handleShowFormatMarks = () => {
-    // Enfoca el editor para que el usuario pueda seguir escribiendo
-    const editor = document.getElementById("editor");
-    if (editor) {
-      console.log("Mostrando marcas de formato...");
-      showFormatMarks();
-      editor.focus();
-    } else {
-      console.error("Elemento con ID 'editor' no encontrado en el DOM.");
-    }
-  };
+
+  useEffect(() => {
+    fetch("http://localhost:8000/text")
+      .then((response) => response.json())
+      .then((data) => {
+        setTexts(data.texts);
+
+        // Inicializar los números de párrafo
+        const paragraphNumbersArray = Array.from(
+          { length: data.texts.length },
+          (_, i) => i + 1
+        );
+        setParagraphNumbers(paragraphNumbersArray);
+      })
+      .catch((error) => console.error("Error al obtener textos: ", error));
+  }, []);
 
   return (
     <div className="App">
       <div id="parentEditor">
         <div id="editor">
-          {texts.map((text, index) => (
-            <div key={index} className="card">
-              <div id="painelEditor">
-                <button
-                  className="btnColor"
-                  onClick={() => handleTextAlignment("left", text._id)}
-                >
-                  <FaAlignLeft />
-                </button>
-                <button
-                  className="btnColor"
-                  onClick={() => handleTextAlignment("center", text._id)}
-                >
-                  <FaAlignCenter />
-                </button>
-                <button
-                  className="btnColor"
-                  onClick={() => handleTextAlignment("right", text._id)}
-                >
-                  <FaAlignRight />
-                </button>
-                <button
-                  className="btnColor"
-                  onClick={() =>
-                    applyStyleToContentEditable("bold", !text.bold, text._id)
-                  }
-                  style={{ fontWeight: text.bold ? "bold" : "normal" }}
-                >
-                  <FaBold />
-                </button>
-
-                <button
-                  className="btnColor"
-                  onClick={() =>
-                    applyStyleToContentEditable(
-                      "italic",
-                      !text.italic,
-                      text._id
-                    )
-                  }
-                  style={{ fontStyle: text.italic ? "italic" : "normal" }}
-                >
-                  <FaItalic />
-                </button>
-
-                <button
-                  className="btnColor"
-                  onClick={() =>
-                    applyStyleToContentEditable(
-                      "underline",
-                      !text.underline,
-                      text._id
-                    )
-                  }
-                  style={{
-                    textDecoration: text.underline ? "underline" : "none",
-                  }}
-                >
-                  <FaUnderline />
-                </button>
-
-                <button onClick={handleShowFormatMarks}>¶</button>
-              </div>
-
-              <div className="editor-de-texto">
-                <div
-                  id="paragraphButtons"
-                  className="paragraph-buttons"
-                  onClick={handleModalShow}
-                ></div>
-
-<div
-  contentEditable={true}
-  className="text-editor"
-  id={`editor-${text._id}`}
-  style={{
-    textAlign: text.alineacion || "left",
-    fontWeight: text.bold ? "bold" : "normal",
-    fontStyle: text.italic ? "italic" : "normal",
-    textDecoration: text.underline ? "underline" : "none",
-  }}
-  onInput={handleContentChange}
-  dangerouslySetInnerHTML={{ __html: editableContent }}
-/>
-
-
-              </div>
-
-              <button
-                className="Boton-guardar"
-                onClick={() => handleSaveClick(text._id)}
-              >
-                Guardar
-              </button>
-            </div>
+          {texts.map((text) => (
+            <TextComponent
+              key={text._id}
+              text={text}
+              handleTextAlignment={handleTextAlignment}
+              applyStyleToContentEditable={applyStyleToContentEditable}
+              handleShowFormatMarks={handleShowFormatMarks}
+              handleSaveClick={handleSaveClick}
+              handleModalShow={handleModalShow}
+            />
           ))}
         </div>
 
