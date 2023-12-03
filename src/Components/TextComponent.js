@@ -18,6 +18,7 @@ const TextComponent = ({
   handleModalShow,
 }) => {
   const [content, setContent] = useState(text.contenido);
+  const [newtext, setNewtext] = useState(text.contenido);
 
   const handleTextAlignmentLocal = (alignment) => {
     handleTextAlignment(alignment, text._id);
@@ -28,22 +29,25 @@ const TextComponent = ({
   };
 
   const handleSaveClickLocal = () => {
-    handleSaveClick(text._id, content);
+    console.log("Texto que se enviara: ", newtext);
+    handleSaveClick(text._id, newtext); // Cambiado de text.contenido a newtext
   };
+  
 
   const handleModalShowLocal = () => {
     handleModalShow();
   };
 
   useEffect(() => {
-    // Actualizar el contenido cuando cambia el texto externo
     setContent(text.contenido);
+    //console.log("Texto en el editor: ", text.contenido);
   }, [text.contenido]);
 
   const handleContentChange = (e) => {
-    setContent(e.target.value);
+    setNewtext(e.target.innerHTML);
+    //console.log("Texto en el editor nuevo: ", newtext);
   };
-
+  
   return (
     <div key={text._id} className="card">
       <div id="painelEditor">
@@ -102,7 +106,6 @@ const TextComponent = ({
           onClick={handleModalShowLocal}
         ></div>
 
-        {/* Utiliza un ol (ordered list) en lugar de contentEditable directamente */}
         <ol
           contentEditable={true}
           className="text-editor"

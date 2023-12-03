@@ -49,7 +49,7 @@ const App = () => {
   };
 
 
-  const handleSaveClick = async (textId) => {
+  const handleSaveClick = async (textId, content) => {
     try {
       // Obtener el texto específico
       const textToUpdate = texts.find((text) => text._id === textId);
@@ -60,7 +60,7 @@ const App = () => {
           bold: textToUpdate.bold,
           italic: textToUpdate.italic,
           underline: textToUpdate.underline,
-          contenido: textToUpdate.contenido,
+          contenido: content,
           // Incluye el nuevo campo de valor seleccionado
           tipo: textToUpdate.selectedValue,
         };
