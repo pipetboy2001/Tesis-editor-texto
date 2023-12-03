@@ -7,6 +7,7 @@ const App = () => {
   const [texts, setTexts] = useState([]);
   const [paragraphNumbers, setParagraphNumbers] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("");  // Nuevo estado para el valor seleccionado
 
   const handleModalClose = () => setShowModal(false);
   const handleModalShow = () => setShowModal(true);
@@ -60,9 +61,12 @@ const App = () => {
           italic: textToUpdate.italic,
           underline: textToUpdate.underline,
           contenido: textToUpdate.contenido,
+          // Incluye el nuevo campo de valor seleccionado
+          tipo: textToUpdate.selectedValue,
         };
 
         console.log("RequestBody:", JSON.stringify(requestBody));
+        //window.alert("¡Guardado con éxito!");
 
         // Enviar la actualización al servidor
         const response = await fetch(
@@ -82,6 +86,8 @@ const App = () => {
           );
         }
         console.log("Actualización enviada con éxito.");
+        
+
       }
     } catch (error) {
       console.error("Error al guardar la actualización:", error.message);
@@ -155,6 +161,20 @@ const App = () => {
     }
   };
 
+  const handleValueChange = (value) => {
+    setSelectedValue(value);
+  };
+
+  const handleSaveValue = (textId) => {
+    console.log(`Guardando valor "${selectedValue}" para el párrafo ${textId}`);
+    setTexts((prevTexts) =>
+      prevTexts.map((text) =>
+        text._id === textId ? { ...text, selectedValue } : text
+      )
+    );
+    handleModalClose();
+  };
+
   const handleParagraphButtonClick = (paragraphId) => {
     // Enfoca el editor y selecciona el párrafo correspondiente
     const editor = document.getElementById("editor");
@@ -201,6 +221,10 @@ const App = () => {
               handleShowFormatMarks={handleShowFormatMarks}
               handleSaveClick={handleSaveClick}
               handleModalShow={handleModalShow}
+              // Pasa los nuevos props para el valor seleccionado
+              selectedValue={selectedValue}
+              handleValueChange={handleValueChange}
+              handleSaveValue={handleSaveValue}
             />
           ))}
         </div>
@@ -210,14 +234,39 @@ const App = () => {
             <Modal.Title>Opciones</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {/* Contenido del modal */}
-            <Button variant="secondary">Opción 1</Button>
-            <Button variant="secondary">Opción 2</Button>
-            <Button variant="secondary">Opción 3</Button>
-            <Button variant="secondary">Opción 4</Button>
+            <Button
+              variant={selectedValue === "Opción 1" ? "primary" : "secondary"}
+              onClick={() => handleValueChange("Opción 1")}
+            >
+              Opción 1
+            </Button>
+            <Button
+              variant={selectedValue === "Opción 2" ? "primary" : "secondary"}
+              onClick={() => handleValueChange("Opción 2")}
+            >
+              Opción 2
+            </Button>
+            <Button
+              variant={selectedValue === "Opción 3" ? "primary" : "secondary"}
+              onClick={() => handleValueChange("Opción 3")}
+            >
+              Opción 3
+            </Button>
+            <Button
+              variant={selectedValue === "Opción 4" ? "primary" : "secondary"}
+              onClick={() => handleValueChange("Opción 4")}
+            >
+              Opción 4
+            </Button>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={handleModalClose}>
+            <Button
+              variant="primary"
+              onClick={() => handleSaveValue(texts[0]._id)}
+            >
+              Guardar
+            </Button>
+            <Button variant="secondary" onClick={handleModalClose}>
               Cerrar
             </Button>
           </Modal.Footer>
