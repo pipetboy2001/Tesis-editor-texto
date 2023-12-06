@@ -227,7 +227,7 @@ const App = () => {
     // Execute handleShowFormatMarks every 5 seconds (adjust the interval as needed)
     const intervalId = setInterval(() => {
       handleShowFormatMarks();
-    }, 100);
+    }, 500);
   
     // Cleanup the interval on component unmount
     return () => clearInterval(intervalId);
