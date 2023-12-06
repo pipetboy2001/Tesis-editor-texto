@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import React, { useState, useCallback } from "react";
+import Button from "@atlaskit/button/standard-button";
+import Modal, {
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  ModalTitle,
+  ModalTransition,
+} from "@atlaskit/modal-dialog";
+import { Form } from "react-bootstrap";
 
 const OptionsModal = ({
   showModal,
@@ -8,10 +16,11 @@ const OptionsModal = ({
   handleValueChange,
   handleSaveValue,
   textId,
-  textContent, // New prop for passing text content
+  textContent,
 }) => {
-  const [author1, setAuthor1] = useState(""); // State for the first author input
-  const [author2, setAuthor2] = useState(""); // State for the second author input
+  const [author1, setAuthor1] = useState("");
+  const [author2, setAuthor2] = useState("");
+  const [isAtlassianModalOpen, setIsAtlassianModalOpen] = useState(false);
 
   const handleAuthor1Change = (e) => {
     setAuthor1(e.target.value);
@@ -21,71 +30,96 @@ const OptionsModal = ({
     setAuthor2(e.target.value);
   };
 
+  const openAtlassianModal = useCallback(
+    () => setIsAtlassianModalOpen(true),
+    []
+  );
+  const closeAtlassianModal = useCallback(
+    () => setIsAtlassianModalOpen(false),
+    []
+  );
+
+  const handleSaveValueAndClose = () => {
+    handleSaveValue(textId);
+    closeAtlassianModal();
+  };
+
   return (
-    <Modal show={showModal} onHide={handleModalClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Opciones</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <p>Texto:</p>
-        <p>{textContent}</p>
+    <div>
+      <ModalTransition>
+        {showModal && (
+          <Modal onClose={handleModalClose}>
+            <ModalHeader>
+              <ModalTitle>Elementos dialógicos</ModalTitle>
+            </ModalHeader>
 
-        <Button
-          variant={selectedValue === "Desacuerdo" ? "primary" : "secondary"}
-          onClick={() => handleValueChange("Desacuerdo")}
-        >
-          Desacuerdo
-        </Button>
-        <Button
-          variant={selectedValue === "Duda" ? "primary" : "secondary"}
-          onClick={() => handleValueChange("Duda")}
-        >
-          Duda
-        </Button>
-        <Button
-          variant={selectedValue === "Norma" ? "primary" : "secondary"}
-          onClick={() => handleValueChange("Norma")}
-        >
-          Norma
-        </Button>
-        <Button
-          variant={selectedValue === "Compromiso" ? "primary" : "secondary"}
-          onClick={() => handleValueChange("Compromiso")}
-        >
-          Compromiso
-        </Button>
+            <ModalBody>
+              <p>Texto:</p>
+              <p>{textContent}</p>
 
-        <Form.Group controlId="author1">
-          <Form.Label>Autor 1</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Nombre del autor"
-            value={author1}
-            onChange={handleAuthor1Change}
-          />
-        </Form.Group>
+              <Button
+                variant={selectedValue === "Desacuerdo" ? "primary" : "secondary"}
+                onClick={() => handleValueChange("Desacuerdo")}
+                style={{ backgroundColor: selectedValue === "Desacuerdo" ? "#ADD8E6" : "inherit" }}
+              >
+                Desacuerdo
+              </Button>
+              <Button
+                variant={selectedValue === "Duda" ? "primary" : "secondary"}
+                onClick={() => handleValueChange("Duda")}
+                style={{ backgroundColor: selectedValue === "Duda" ? "#ADD8E6" : "inherit" }}
+              >
+                Duda
+              </Button>
+              <Button
+                variant={selectedValue === "Norma" ? "primary" : "secondary"}
+                onClick={() => handleValueChange("Norma")}
+                style={{ backgroundColor: selectedValue === "Norma" ? "#ADD8E6" : "inherit" }}
+              >
+                Norma
+              </Button>
+              <Button
+                variant={selectedValue === "Compromiso" ? "primary" : "secondary"}
+                onClick={() => handleValueChange("Compromiso")}
+                style={{ backgroundColor: selectedValue === "Compromiso" ? "#ADD8E6" : "inherit" }}
+              >
+                Compromiso
+              </Button>
 
-        {selectedValue === "Desacuerdo" && (
-          <Form.Group controlId="author2">
-            <Form.Label>Autor 2</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Nombre del segundo autor"
-              value={author2}
-              onChange={handleAuthor2Change}
-            />
-          </Form.Group>
+              <Form.Group controlId="author1">
+                <Form.Label>Autor 1</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Nombre del autor"
+                  value={author1}
+                  onChange={handleAuthor1Change}
+                />
+              </Form.Group>
+
+              {selectedValue === "Desacuerdo" && (
+                <Form.Group controlId="author2">
+                  <Form.Label>Autor 2</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Nombre del segundo autor"
+                    value={author2}
+                    onChange={handleAuthor2Change}
+                  />
+                </Form.Group>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button variant="primary" onClick={handleSaveValueAndClose}>
+                Guardar
+              </Button>
+              <Button variant="secondary" onClick={handleModalClose}>
+                Cerrar
+              </Button>
+            </ModalFooter>
+          </Modal>
         )}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary" onClick={() => handleSaveValue(textId)}>
-          Guardar
-        </Button>
-        <Button variant="secondary" onClick={handleModalClose}>
-          Cerrar
-        </Button>
-      </Modal.Footer>
-    </Modal>
+      </ModalTransition>
+    </div>
   );
 };
 
