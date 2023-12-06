@@ -6,7 +6,7 @@ module.exports = {
     entry: "./src/entry.js",
     mode: "development",
     devServer: {
-        port: 3001,
+        port: 3011,
     },
     module: {
         rules: [
