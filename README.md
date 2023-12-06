@@ -12,7 +12,7 @@ Asegúrate de tener instalado Node.js en tu sistema con una versión igual o sup
 Sigue estos pasos para iniciar el microfront:
 
 
-1.  Navega a la carpeta del microservicio:
+1.  Navega a la carpeta del microfront:
     
     bashCopy code
     
@@ -31,8 +31,8 @@ Sigue estos pasos para iniciar el microfront:
     `npm start` 
     
 
-El microservicio estará disponible en [http://localhost:3100](http://localhost:3100/).
+El microfront estará disponible en [http://localhost:3100](http://localhost:3100/).
 
 ## Uso
 
-Una vez que el microservicio esté en funcionamiento y con el [backend](https://github.com/Experiencia-de-usuario-2023/ms-editor-texto), puedes acceder al editor de texto ingresando a la URL proporcionada. Desde allí, podrás crear y editar actas dialogicas de manera fácil y eficiente.
+Una vez que el microfront esté en funcionamiento y con el [backend](https://github.com/Experiencia-de-usuario-2023/ms-editor-texto), puedes acceder al editor de texto ingresando a la URL proporcionada. Desde allí, podrás crear y editar actas dialogicas de manera fácil y eficiente.
