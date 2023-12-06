@@ -35,15 +35,23 @@
   display: flex;
   flex-direction: column;
   margin-right: 2px;
-  margin-top: 17px; /* Ajusta el margen superior según tus necesidades */
-
-
+  margin-top: 14px; /* Ajusta el margen superior según tus necesidades */
 }
 
 .paragraph-buttons button {
-  font-size: 10px; /* Ajusta el tamaño según tus necesidades */
-  padding: 3px; /* Ajusta el relleno según tus necesidades */
+  font-size: 10px; /* Ajusta el tamaño de la fuente según tus preferencias */
+  padding: 5px 10px; /* Ajusta el relleno según tus preferencias */
+  background-color: #ecedf0;
+  border: none; /* Elimina el contorno del botón */
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
+
+.paragraph-buttons div:hover {
+  background-color: #b1b0b0;
+}
+
+
 .text-editor {
   flex-grow: 1;
   /* Otros estilos que ya tienes... */

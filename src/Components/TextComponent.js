@@ -93,7 +93,7 @@ const TextComponent = ({
           >
             <FaUnderline />
           </Button>
-          <Button onClick={handleShowFormatMarks}>Actualizar Elementos Dialogicos</Button>
+          {/* <Button onClick={handleShowFormatMarks}>Actualizar Elementos Dialogicos</Button> */}
         </div>
   
         <div className="editor-de-texto">
