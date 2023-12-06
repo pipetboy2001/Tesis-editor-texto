@@ -9,7 +9,7 @@ Asegúrate de tener instalado Node.js en tu sistema con una versión igual o sup
 
 ## Inicio Rápido
 
-Sigue estos pasos para iniciar el microservicio:
+Sigue estos pasos para iniciar el microfront:
 
 
 1.  Navega a la carpeta del microservicio:
@@ -24,7 +24,7 @@ Sigue estos pasos para iniciar el microservicio:
     
     `npm install` 
     
-4.  Inicia el microservicio:
+4.  Inicia el microfront:
     
     bashCopy code
     
