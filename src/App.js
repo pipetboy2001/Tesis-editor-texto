@@ -235,28 +235,28 @@ const App = () => {
           </Modal.Header>
           <Modal.Body>
             <Button
-              variant={selectedValue === "Opción 1" ? "primary" : "secondary"}
-              onClick={() => handleValueChange("Opción 1")}
+              variant={selectedValue === "Desacuerdo" ? "primary" : "secondary"}
+              onClick={() => handleValueChange("Desacuerdo")}
             >
-              Opción 1
+              Desacuerdo
             </Button>
             <Button
-              variant={selectedValue === "Opción 2" ? "primary" : "secondary"}
-              onClick={() => handleValueChange("Opción 2")}
+              variant={selectedValue === "Duda" ? "primary" : "secondary"}
+              onClick={() => handleValueChange("Duda")}
             >
-              Opción 2
+              Duda
             </Button>
             <Button
-              variant={selectedValue === "Opción 3" ? "primary" : "secondary"}
-              onClick={() => handleValueChange("Opción 3")}
+              variant={selectedValue === "Norma" ? "primary" : "secondary"}
+              onClick={() => handleValueChange("Norma")}
             >
-              Opción 3
+              Norma
             </Button>
             <Button
-              variant={selectedValue === "Opción 4" ? "primary" : "secondary"}
-              onClick={() => handleValueChange("Opción 4")}
+              variant={selectedValue === "Compromiso" ? "primary" : "secondary"}
+              onClick={() => handleValueChange("Compromiso")}
             >
-              Opción 4
+              Compromiso
             </Button>
           </Modal.Body>
           <Modal.Footer>
