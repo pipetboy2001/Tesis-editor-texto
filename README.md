@@ -1,6 +1,6 @@
-# Microservicio de Editor de Texto
+# Microfront de Editor de Texto
 
-Microservicio de Editor de Texto para ingresar actas dialógicas
+Microfront de Editor de Texto para ingresar actas dialógicas
 Este proyecto proporciona una interfaz sencilla para la creación y edición de actas dialogicas.
 
 ## Requisitos
