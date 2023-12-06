@@ -6,6 +6,7 @@ import OptionsModal from "./Components/OptionsModal"; // Importa el nuevo compon
 
 
 const App = () => {
+  const [databaseError, setDatabaseError] = useState(false);
   const [texts, setTexts] = useState([]);
   const [paragraphNumbers, setParagraphNumbers] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -101,7 +102,7 @@ const App = () => {
     // Enfoca el editor para que el usuario pueda seguir escribiendo
     const editor = document.getElementById("editor");
     if (editor) {
-      console.log("Mostrando marcas de formato...");
+      //console.log("Mostrando marcas de formato...");
       showFormatMarks();
       editor.focus();
     } else {
@@ -146,7 +147,7 @@ const App = () => {
 
       // Actualizar el estado con los IDs de párrafo
       setParagraphNumbers(metadata.map((item) => item.id));
-      console.log("Marcas de formato:", metadata);
+      //console.log("Marcas de formato:", metadata);
       // Crear botones para cada párrafo
       const buttonsContainer = document.getElementById("paragraphButtons");
       if (buttonsContainer) {
@@ -195,54 +196,92 @@ const App = () => {
 
 
   useEffect(() => {
-    fetch("http://localhost:8000/text")
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/text");
+        if (!response.ok) {
+          setDatabaseError(true);
+          throw new Error(`Error al obtener textos: ${response.statusText}`);
+        }
+  
+        const data = await response.json();
         setTexts(data.texts);
-
+  
         // Inicializar los números de párrafo
         const paragraphNumbersArray = Array.from(
           { length: data.texts.length },
           (_, i) => i + 1
         );
         setParagraphNumbers(paragraphNumbersArray);
-      })
-      .catch((error) => console.error("Error al obtener textos: ", error));
-  }, []);
+  
+        // Llamar a handleShowFormatMarks después de actualizar texts
+        handleShowFormatMarks();
+      } catch (error) {
+        console.error("Error al obtener textos: ", error);
+      }
+    };
+  
+    // Fetch data initially
+    fetchData();
+  
+    // Execute handleShowFormatMarks every 5 seconds (adjust the interval as needed)
+    const intervalId = setInterval(() => {
+      handleShowFormatMarks();
+    }, 100);
+  
+    // Cleanup the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []); // Las dependencias vacías aseguran que solo se ejecute una vez al montar el componente
+  
+
 
   return (
-    <div className="App">
-      <div id="parentEditor">
-        <div id="editor">
-          {texts.map((text) => (
-            <TextComponent
-              key={text._id}
-              text={text}
-              handleTextAlignment={handleTextAlignment}
-              applyStyleToContentEditable={applyStyleToContentEditable}
-              handleShowFormatMarks={handleShowFormatMarks}
-              handleSaveClick={handleSaveClick}
-              handleModalShow={handleModalShow}
-              // Pasa los nuevos props para el valor seleccionado
+    <>
+      <div className="App">
+        {databaseError ? (
+          <div>
+            <p>¡Falta la conexión a la base de datos!</p>
+            <p>
+              Por favor, revisa tu configuración o consulta el{" "}
+              <a href="https://github.com/Experiencia-de-usuario-2023/ms-editor-texto" target="_blank" rel="noopener noreferrer">
+                repositorio en GitHub
+              </a>{" "}
+              para obtener ayuda.
+            </p>
+          </div>
+        ) : (
+          <div id="parentEditor">
+            <div id="editor">
+              {texts.map((text) => (
+                <TextComponent
+                  key={text._id}
+                  text={text}
+                  handleTextAlignment={handleTextAlignment}
+                  applyStyleToContentEditable={applyStyleToContentEditable}
+                  handleShowFormatMarks={handleShowFormatMarks}
+                  handleSaveClick={handleSaveClick}
+                  handleModalShow={handleModalShow}
+                  // Pasa los nuevos props para el valor seleccionado
+                  selectedValue={selectedValue}
+                  handleValueChange={handleValueChange}
+                  handleSaveValue={handleSaveValue}
+                />
+              ))}
+            </div>
+  
+            <OptionsModal
+              showModal={showModal}
+              handleModalClose={handleModalClose}
               selectedValue={selectedValue}
               handleValueChange={handleValueChange}
               handleSaveValue={handleSaveValue}
+              textId={texts.length > 0 ? texts[0]._id : null}
             />
-          ))}
-        </div>
-
-        <OptionsModal
-          showModal={showModal}
-          handleModalClose={handleModalClose}
-          selectedValue={selectedValue}
-          handleValueChange={handleValueChange}
-          handleSaveValue={handleSaveValue}
-          textId={texts.length > 0 ? texts[0]._id : null}
-        />
-
+          </div>
+        )}
+        <div></div>
       </div>
-      <div></div>
-    </div>
+    </>
   );
 }
 
