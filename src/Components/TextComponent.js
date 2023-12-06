@@ -8,6 +8,7 @@ import {
   FaUnderline,
 } from "react-icons/fa";
 import "./../Styles/Text.css";
+import Button from '@atlaskit/button';
 
 const TextComponent = ({
   text,
@@ -48,85 +49,81 @@ const TextComponent = ({
     //console.log("Texto en el editor nuevo: ", newtext);
   };
   
-  return (
-    <div key={text._id} className="card">
-      <div id="painelEditor">
-        <button
-          className="btnColor"
-          onClick={() => handleTextAlignmentLocal("left")}
-        >
-          <FaAlignLeft />
-        </button>
-        <button
-          className="btnColor"
-          onClick={() => handleTextAlignmentLocal("center")}
-        >
-          <FaAlignCenter />
-        </button>
-        <button
-          className="btnColor"
-          onClick={() => handleTextAlignmentLocal("right")}
-        >
-          <FaAlignRight />
-        </button>
-        <button
-          className="btnColor"
-          onClick={() => applyStyleToContentEditableLocal("bold", !text.bold)}
-          style={{ fontWeight: text.bold ? "bold" : "normal" }}
-        >
-          <FaBold />
-        </button>
-        <button
-          className="btnColor"
-          onClick={() =>
-            applyStyleToContentEditableLocal("italic", !text.italic)
-          }
-          style={{ fontStyle: text.italic ? "italic" : "normal" }}
-        >
-          <FaItalic />
-        </button>
-        <button
-          className="btnColor"
-          onClick={() =>
-            applyStyleToContentEditableLocal("underline", !text.underline)
-          }
-          style={{
-            textDecoration: text.underline ? "underline" : "none",
-          }}
-        >
-          <FaUnderline />
-        </button>
-        <button onClick={handleShowFormatMarks}>Actualizar Elementos Dialogicos</button>
+ return (
+      <div key={text._id} className="card">
+        <div id="painelEditor">
+          <Button
+            className="btnColor"
+            onClick={() => handleTextAlignmentLocal('left')}
+          >
+            <FaAlignLeft />
+          </Button>
+          <Button
+            className="btnColor"
+            onClick={() => handleTextAlignmentLocal('center')}
+          >
+            <FaAlignCenter />
+          </Button>
+          <Button
+            className="btnColor"
+            onClick={() => handleTextAlignmentLocal('right')}
+          >
+            <FaAlignRight />
+          </Button>
+          <Button
+            className="btnColor"
+            onClick={() => applyStyleToContentEditableLocal('bold', !text.bold)}
+            style={{ fontWeight: text.bold ? 'bold' : 'normal' }}
+          >
+            <FaBold />
+          </Button>
+          <Button
+            className="btnColor"
+            onClick={() => applyStyleToContentEditableLocal('italic', !text.italic)}
+            style={{ fontStyle: text.italic ? 'italic' : 'normal' }}
+          >
+            <FaItalic />
+          </Button>
+          <Button
+            className="btnColor"
+            onClick={() => applyStyleToContentEditableLocal('underline', !text.underline)}
+            style={{
+              textDecoration: text.underline ? 'underline' : 'none',
+            }}
+          >
+            <FaUnderline />
+          </Button>
+          <Button onClick={handleShowFormatMarks}>Actualizar Elementos Dialogicos</Button>
+        </div>
+  
+        <div className="editor-de-texto">
+          <div
+            id="paragraphButtons"
+            className="paragraph-buttons"
+            onClick={handleModalShowLocal}
+          ></div>
+  
+          <ol
+            contentEditable={true}
+            className="text-editor"
+            id={`editor-${text._id}`}
+            onBlur={handleSaveClickLocal}
+            onInput={handleContentChange}
+            dangerouslySetInnerHTML={{ __html: content }}
+            style={{
+              textAlign: text.alineacion || 'left',
+              fontWeight: text.bold ? 'bold' : 'normal',
+              fontStyle: text.italic ? 'italic' : 'normal',
+              textDecoration: text.underline ? 'underline' : 'none',
+            }}
+          />
+        </div>
+  
+        <Button appearance="primary" onClick={handleSaveClickLocal}>
+          Guardar
+        </Button>
       </div>
-
-      <div className="editor-de-texto">
-        <div
-          id="paragraphButtons"
-          className="paragraph-buttons"
-          onClick={handleModalShowLocal}
-        ></div>
-
-        <ol
-          contentEditable={true}
-          className="text-editor"
-          id={`editor-${text._id}`}
-          onBlur={handleSaveClickLocal}
-          onInput={handleContentChange}
-          dangerouslySetInnerHTML={{ __html: content }}
-          style={{
-            textAlign: text.alineacion || "left",
-            fontWeight: text.bold ? "bold" : "normal",
-            fontStyle: text.italic ? "italic" : "normal",
-            textDecoration: text.underline ? "underline" : "none",
-          }}
-        />
-      </div>
-
-      <button className="Boton-guardar" onClick={handleSaveClickLocal}>
-        Guardar
-      </button>
-    </div>
-  );
-};
-
-export default TextComponent;
+    );
+  };
+  
+  export default TextComponent;
