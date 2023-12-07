@@ -14,24 +14,18 @@ Sigue estos pasos para iniciar el microfront:
 
 1.  Navega a la carpeta del microfront:
     
-    bashCopy code
-    
     `cd mf-editor-texto` 
     
 2.  Instala las dependencias:
     
-    bashCopy code
-    
-    `npm install` 
+    `yarn install` 
     
 4.  Inicia el microfront:
     
-    bashCopy code
-    
-    `npm start` 
+    `yarn start` 
     
 
-El microfront estará disponible en [http://localhost:3100](http://localhost:3100/).
+El microfront estará disponible en [http://localhost:3011](http://localhost:3011/).
 
 ## Uso
 
