@@ -3,59 +3,70 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 const { dependencies } = require("./package.json");
 
 module.exports = {
-    entry: "./src/entry.js",
-    mode: "development",
-    devServer: {
-        port: 3011,
-    },
-    module: {
-        rules: [
-            {
-            test: /\.(js|jsx)?$/,
-            exclude: /node_modules/,
-            use: [
-                {
-                loader: "babel-loader",
-                options: {
-                    presets: ["@babel/preset-env", "@babel/preset-react"],
-                },
-                },
-            ],
+  entry: "./src/entry.js",
+  mode: "development",
+  devServer: {
+    port: 3011,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)?$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/preset-env", "@babel/preset-react"],
             },
-            {
-                test: /\.css$/i,
-                use: ["style-loader", "css-loader"],
-            },
+          },
         ],
-    },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: "./public/index.html",
-            favicon: "./public/favicon.ico",
-        }),
-        new ModuleFederationPlugin({
-            name: "HeaderApp",
-            //name: "Editor-app",
-            filename: "remoteEntry.js",
-            exposes: {
-              "./Header": "./src/App",
-              //  "./Editor": "./src/App",
+      },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+                outputPath: 'images', // or your desired output path
+                publicPath: '/images', // make sure this matches the outputPath
+    
             },
-            shared: {
-              ...dependencies,
-              react: {
-                singleton: true,
-                requiredVersion: dependencies["react"],
-              },
-              "react-dom": {
-                singleton: true,
-                requiredVersion: dependencies["react-dom"],
-              },
-            },
-          }),
+          },
+        ],
+      },
     ],
-    resolve: {
-        extensions: [".js", ".jsx"],
-    },
-    target: "web",
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./public/index.html",
+      favicon: "./public/favicon.ico",
+    }),
+    new ModuleFederationPlugin({
+      name: "HeaderApp",
+      filename: "remoteEntry.js",
+      exposes: {
+        "./Header": "./src/App",
+      },
+      shared: {
+        ...dependencies,
+        react: {
+          singleton: true,
+          requiredVersion: dependencies["react"],
+        },
+        "react-dom": {
+          singleton: true,
+          requiredVersion: dependencies["react-dom"],
+        },
+      },
+    }),
+  ],
+  resolve: {
+    extensions: [".js", ".jsx"],
+  },
+  target: "web",
 };

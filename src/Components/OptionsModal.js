@@ -9,6 +9,11 @@ import Modal, {
 } from "@atlaskit/modal-dialog";
 import { Form } from "react-bootstrap";
 
+import IconDesacuerdo from "./../Assets/png/i__Desacuerdo.png";
+import IconDuda from "./../Assets/png/i__Duda.png";
+import IconNorma from "./../Assets/png/i__Acuerdo.png";
+import IconCompromiso from "./../Assets/png/i__Compromiso.png";
+
 const OptionsModal = ({
   showModal,
   handleModalClose,
@@ -30,10 +35,6 @@ const OptionsModal = ({
     setAuthor2(e.target.value);
   };
 
-  const openAtlassianModal = useCallback(
-    () => setIsAtlassianModalOpen(true),
-    []
-  );
   const closeAtlassianModal = useCallback(
     () => setIsAtlassianModalOpen(false),
     []
@@ -58,31 +59,69 @@ const OptionsModal = ({
               <p>{textContent}</p>
 
               <Button
-                variant={selectedValue === "Desacuerdo" ? "primary" : "secondary"}
+                variant={
+                  selectedValue === "Desacuerdo" ? "primary" : "secondary"
+                }
                 onClick={() => handleValueChange("Desacuerdo")}
-                style={{ backgroundColor: selectedValue === "Desacuerdo" ? "#ADD8E6" : "inherit" }}
+                style={{
+                  backgroundColor:
+                    selectedValue === "Desacuerdo" ? "#ADD8E6" : "inherit",
+                }}
               >
+                <img
+                  src={IconDesacuerdo}
+                  alt="Desacuerdo Icon"
+                  style={{ width: "20px", height: "20px", marginRight: "5px" }} // Adjust the size and padding as needed
+                />
                 Desacuerdo
               </Button>
               <Button
                 variant={selectedValue === "Duda" ? "primary" : "secondary"}
                 onClick={() => handleValueChange("Duda")}
-                style={{ backgroundColor: selectedValue === "Duda" ? "#ADD8E6" : "inherit" }}
+                style={{
+                  backgroundColor:
+                    selectedValue === "Duda" ? "#ADD8E6" : "inherit",
+                }}
               >
+                <img
+                  src={IconDuda}
+                  alt="Duda Icon"
+                  style={{ width: "20px", height: "20px", marginRight: "5px" }} // Adjust the size and padding as needed
+                />
                 Duda
               </Button>
               <Button
-                variant={selectedValue === "Norma" ? "primary" : "secondary"}
-                onClick={() => handleValueChange("Norma")}
-                style={{ backgroundColor: selectedValue === "Norma" ? "#ADD8E6" : "inherit" }}
+                variant={selectedValue === "Acuerdo" ? "primary" : "secondary"}
+                onClick={() => handleValueChange("Acuerdo")}
+                style={{
+                  backgroundColor:
+                    selectedValue === "Norma" ? "#ADD8E6" : "inherit",
+                }}
               >
+                <img
+
+                  src={IconNorma}
+                  alt="Acuerdo Icon"
+                  style={{ width: "20px", height: "20px", marginRight: "5px" }} // Adjust the size and padding as needed
+                />
+
                 Norma
               </Button>
               <Button
-                variant={selectedValue === "Compromiso" ? "primary" : "secondary"}
+                variant={
+                  selectedValue === "Compromiso" ? "primary" : "secondary"
+                }
                 onClick={() => handleValueChange("Compromiso")}
-                style={{ backgroundColor: selectedValue === "Compromiso" ? "#ADD8E6" : "inherit" }}
+                style={{
+                  backgroundColor:
+                    selectedValue === "Compromiso" ? "#ADD8E6" : "inherit",
+                }}
               >
+                <img
+                  src={IconCompromiso}
+                  alt="Compromiso Icon"
+                  style={{ width: "20px", height: "20px", marginRight: "5px" }} // Adjust the size and padding as needed
+                />
                 Compromiso
               </Button>
 
