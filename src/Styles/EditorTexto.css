@@ -1,0 +1,85 @@
+/* EditorTexto.css */
+.EditorTexto {
+    width: 60%;
+    margin: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .header {
+    background-color: #ADD8E6;
+    color: #fff;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 1px 0px;
+    grid-template-areas:
+      "id-section tipo-autor-section";
+  }
+  
+  .id-section {
+    grid-area: id-section;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .id-label {
+    margin-right: 5px;
+  }
+  
+  .id-value {
+    margin-top: 5px; /* Ajusta el espacio entre el ID y el borde superior del contenedor */
+  }
+  
+  .tipo-autor-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0px 1px;
+    grid-template-areas:
+      "tipo-section autor-section";
+  }
+  
+  .tipo-section,
+  .autor-section {
+    padding: 10px;
+  }
+  
+
+
+/* EditorTexto.css */
+
+  
+
+  
+  
+  .editor {
+    padding: 10px;
+  }
+  /* EditorTexto.css */
+.editor Button {
+    width: 100%; /* Haz que el botón ocupe el 100% del ancho disponible */
+  }
+  
+
+  /* EditorTexto.css */
+.editor span[contentEditable=true] {
+    min-height: 80px; /* Ajusta la altura mínima según tus preferencias */
+    display: block; /* Hace que el span ocupe todo el ancho disponible */
+    margin-bottom: 10px; /* Ajusta el margen inferior según tus preferencias */
+    overflow-y: auto; /* Agrega barras de desplazamiento vertical si el contenido excede la altura */
+    white-space: pre-wrap; /* Mantiene los saltos de línea */
+    word-wrap: break-word; /* Evita que las palabras largas se salgan del contenedor */
+    
+  }
+  
+  
+  .footer {
+    padding: 5px;
+    text-align: center;
+  }
+  
+
+  

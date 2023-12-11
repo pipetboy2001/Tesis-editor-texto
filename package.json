@@ -4,7 +4,10 @@
   "private": true,
   "dependencies": {
     "@atlaskit/button": "^16.17.11",
+    "@atlaskit/form": "^9.0.4",
     "@atlaskit/modal-dialog": "^12.10.1",
+    "@atlaskit/select": "^17.0.3",
+    "@atlaskit/textfield": "^6.0.0",
     "bootstrap": "^5.3.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
