@@ -3,7 +3,7 @@ import Button from "@atlaskit/button";
 import Select from "@atlaskit/select";
 import { Label } from "@atlaskit/form";
 import Textfield from "@atlaskit/textfield";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import "./../Styles/EditorTexto.css";
 
 const tipoOptions = [
@@ -20,7 +20,8 @@ const generateUniqueId = () => {
 const EditorTexto = ({ selectedId, texts }) => {
   const [selectedText, setSelectedText] = useState(null);
   const [editableContent, setEditableContent] = useState([]);
-  const [selectedTipo, setSelectedTipo] = useState(null);
+  const [selectedTipos, setSelectedTipos] = useState([]);
+  const [updateStatus, setUpdateStatus] = useState(null);
 
   useEffect(() => {
     const selectedTextData = texts.find((text) => text._id === selectedId);
@@ -37,7 +38,7 @@ const EditorTexto = ({ selectedId, texts }) => {
         paragraphId: elemento._id, // Añadir el ID del párrafo
       })) || []
     );
-    setSelectedTipo(selectedTextData?.elementos[0]?.tipo || null);
+    setSelectedTipos(selectedTextData?.elementos[0]?.tipo || null);
   }, [selectedId, texts]);
 
   const handleContentChange = (index, newContent) => {
@@ -48,11 +49,39 @@ const EditorTexto = ({ selectedId, texts }) => {
   };
 
   const handleSave = (index) => {
-    // Aquí puedes agregar la lógica para guardar el contenido del párrafo
-    console.log(
-      `Guardando contenido del párrafo ${index}:`,
-      editableContent[index]
-    );
+    const newEditableContent = [...editableContent];
+    newEditableContent[index].tipo = selectedTipos[index];
+    setEditableContent(newEditableContent);
+    // Devuelve el contenido actualizado para que handleSaveAll pueda recogerlo
+    return newEditableContent[index];
+  };
+  
+
+  const handleSaveAll = async () => {
+    try {
+      // Mapea sobre los elementos y guarda cada elemento actualizado en un array
+      const updatedContents = editableContent.map((elemento, index) => {
+        return handleSave(index);
+      });
+  
+      const response = await fetch(`http://172.111.10.181:8000/text/update/${selectedText._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          elementos: updatedContents,
+        }),
+      });
+  
+      if (response.ok) {
+        console.log("¡Guardado todo con éxito!");
+      } else {
+        console.error("Error al guardar todo");
+      }
+    } catch (error) {
+      console.error("Error al guardar todo:", error);
+    }
   };
 
   const handleAddParagraph = () => {
@@ -72,7 +101,13 @@ const EditorTexto = ({ selectedId, texts }) => {
     ]);
 
     // Si deseas también cambiar el tipo seleccionado al predeterminado del nuevo párrafo, puedes hacerlo aquí
-    setSelectedTipo(tipoOptions[0].value);
+    setSelectedTipos(tipoOptions[0].value);
+  };
+
+  const handleTipoChange = (index, selectedValue) => {
+    const newSelectedTipos = [...selectedTipos];
+    newSelectedTipos[index] = selectedValue;
+    setSelectedTipos(newSelectedTipos);
   };
 
   return (
@@ -90,24 +125,23 @@ const EditorTexto = ({ selectedId, texts }) => {
                 </div>
                 <div className="tipo-autor-section"></div>
                 <div className="tipo-autor-section">
-                  <div className="tipo-section">
-                    <Label
-                      className="label-white-text"
-                      htmlFor={`tipo-${index}`}
-                    >
-                      Tipo
-                    </Label>
-                    <Select
-                      className="tipo-select"
-                      options={tipoOptions}
-                      defaultValue={tipoOptions.find(
-                        (opt) => opt.value === selectedTipo
-                      )}
-                      onChange={(selectedOption) => {
-                        setSelectedTipo(selectedOption.value);
-                      }}
-                    />
-                  </div>
+                <div className="tipo-section">
+                <label className="label-white-text" htmlFor={`tipo-${index}`}>
+                  Tipo
+                </label>
+                <select
+                  className="tipo-select"
+                  value={selectedTipos[index]}
+                  onChange={(e) => handleTipoChange(index, e.target.value)}
+                >
+                  {tipoOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
                   <div className="autor-section">
                     <Label htmlFor={`autor-${index}`}>Autor</Label>
                     <Textfield
@@ -147,11 +181,15 @@ const EditorTexto = ({ selectedId, texts }) => {
               </div>
             </div>
           ))}
+        <div className="button-section">
           <Button appearance="primary" onClick={handleAddParagraph}>
-        Añadir nuevo párrafo
-      </Button>
+            Añadir nuevo párrafo
+          </Button>
+          <Button appearance="primary" onClick={handleSaveAll}>
+            Guardar Todo
+          </Button>
+        </div>
       </div>
-      
     </>
   );
 };
