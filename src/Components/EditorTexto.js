@@ -38,7 +38,11 @@ const EditorTexto = ({ selectedId, texts }) => {
         paragraphId: elemento._id, // Añadir el ID del párrafo
       })) || []
     );
-    setSelectedTipos(selectedTextData?.elementos[0]?.tipo || null);
+  
+    // Inicializar selectedTipos para cada tipo individualmente
+    setSelectedTipos(
+      selectedTextData?.elementos.map((elemento) => elemento.tipo) || []
+    );
   }, [selectedId, texts]);
 
   const handleContentChange = (index, newContent) => {
@@ -53,9 +57,9 @@ const EditorTexto = ({ selectedId, texts }) => {
     newEditableContent[index].tipo = selectedTipos[index];
     setEditableContent(newEditableContent);
     // Devuelve el contenido actualizado para que handleSaveAll pueda recogerlo
+    console.log(newEditableContent[index]); // Imprimir el contenido actualizado en la consola
     return newEditableContent[index];
   };
-  
 
   const handleSaveAll = async () => {
     try {
@@ -63,17 +67,20 @@ const EditorTexto = ({ selectedId, texts }) => {
       const updatedContents = editableContent.map((elemento, index) => {
         return handleSave(index);
       });
-  
-      const response = await fetch(`http://172.111.10.181:8000/text/update/${selectedText._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          elementos: updatedContents,
-        }),
-      });
-  
+
+      const response = await fetch(
+        `http://172.111.10.181:8000/text/update/${selectedText._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            elementos: updatedContents,
+          }),
+        }
+      );
+
       if (response.ok) {
         console.log("¡Guardado todo con éxito!");
       } else {
@@ -125,22 +132,25 @@ const EditorTexto = ({ selectedId, texts }) => {
                 </div>
                 <div className="tipo-autor-section"></div>
                 <div className="tipo-autor-section">
-                <div className="tipo-section">
-                <label className="label-white-text" htmlFor={`tipo-${index}`}>
-                  Tipo
-                </label>
-                <select
-                  className="tipo-select"
-                  value={selectedTipos[index]}
-                  onChange={(e) => handleTipoChange(index, e.target.value)}
-                >
-                  {tipoOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <div className="tipo-section">
+                    <label
+                      className="label-white-text"
+                      htmlFor={`tipo-${index}`}
+                    >
+                      Tipo
+                    </label>
+                    <select
+                      className="tipo-select"
+                      value={selectedTipos[index]}
+                      onChange={(e) => handleTipoChange(index, e.target.value)}
+                    >
+                      {tipoOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
                   <div className="autor-section">
                     <Label htmlFor={`autor-${index}`}>Autor</Label>
@@ -160,7 +170,7 @@ const EditorTexto = ({ selectedId, texts }) => {
               </div>
 
               <div className="editor">
-                <p
+                <div
                   style={{
                     textAlign: elemento.alineacion,
                     fontWeight: elemento.bold ? "bold" : "normal",
@@ -171,10 +181,11 @@ const EditorTexto = ({ selectedId, texts }) => {
                   <Textfield
                     id={`id-${index}`}
                     className="editable-content"
-                    value={elemento.contenido} // Asegúrate de pasar el valor correcto
+                    value={elemento.contenido}
                     onChange={(e) => handleContentChange(index, e.target.value)}
                   />
-                </p>
+                </div>
+
                 <Button appearance="primary" onClick={() => handleSave(index)}>
                   Guardar
                 </Button>
