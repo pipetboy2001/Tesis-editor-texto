@@ -1,6 +1,6 @@
 /* EditorTexto.css */
 .EditorTexto {
-    width: 60%;
+    
     margin: auto;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -46,15 +46,7 @@
   .autor-section {
     padding: 10px;
   }
-  
-
-
-/* EditorTexto.css */
-
-  
-
-  
-  
+    
   .editor {
     padding: 10px;
   }
@@ -103,3 +95,31 @@
     height: 50%;
     margin-top: 5px; /* Agrega espacio entre la etiqueta y el select */
   }
+
+  .app-header {
+    width: 60%;
+    margin: auto;
+    border: 1px solid #ccc;
+    position: sticky;
+    top: 0;
+    background-color: #f0f0f0;
+    padding: 10px;
+    z-index: 1000;
+    box-sizing: border-box; /* Asegura un modelo de caja consistente */
+  }
+  
+
+  .view-mode-section {
+    width: 60%;
+    margin: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .app-content {
+    padding: 20px;
+    margin-top: 70px; /* Ajusta según la altura de tu encabezado */
+  }
+
+  

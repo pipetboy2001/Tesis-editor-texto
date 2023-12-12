@@ -1,0 +1,29 @@
+/* VistaBonita.css */
+.vista-bonita {
+    /* Agrega estilos según tus preferencias */
+  }
+  
+  .formatted-paragraph {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* Agrega más estilos según sea necesario */
+  }
+  
+  .paragraph-type {
+    font-weight: bold;
+    margin-right: 5px;
+    /* Ajusta el estilo del tipo de párrafo según tus preferencias */
+  }
+  
+  .paragraph-author {
+    color: #555;
+    margin-right: 10px;
+    /* Ajusta el estilo del autor según tus preferencias */
+  }
+  
+  .paragraph-content {
+    /* Ajusta el estilo del contenido según tus preferencias */
+  }
+  

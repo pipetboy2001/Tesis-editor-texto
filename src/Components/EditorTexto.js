@@ -4,6 +4,8 @@ import Select from "@atlaskit/select";
 import { Label } from "@atlaskit/form";
 import Textfield from "@atlaskit/textfield";
 import { v4 as uuidv4 } from "uuid";
+import ParagraphEditor from "./ParagraphEditor";
+import VistaBonita from "./VistaBonita";
 import "./../Styles/EditorTexto.css";
 
 const tipoOptions = [
@@ -21,7 +23,11 @@ const EditorTexto = ({ selectedId, texts }) => {
   const [selectedText, setSelectedText] = useState(null);
   const [editableContent, setEditableContent] = useState([]);
   const [selectedTipos, setSelectedTipos] = useState([]);
-  const [updateStatus, setUpdateStatus] = useState(null);
+  const [viewMode, setViewMode] = useState("editor"); // Puedes usar "editor" y "bonita" como modos
+
+  const handleToggleView = () => {
+    setViewMode((prevMode) => (prevMode === "editor" ? "bonita" : "editor"));
+  };
 
   useEffect(() => {
     const selectedTextData = texts.find((text) => text._id === selectedId);
@@ -35,18 +41,16 @@ const EditorTexto = ({ selectedId, texts }) => {
         italic: elemento.italic,
         underline: elemento.underline,
         autor: elemento.autor,
-        paragraphId: elemento._id, // Añadir el ID del párrafo
+        paragraphId: elemento._id,
       })) || []
     );
-  
-    // Inicializar selectedTipos para cada tipo individualmente
+
     setSelectedTipos(
       selectedTextData?.elementos.map((elemento) => elemento.tipo) || []
     );
   }, [selectedId, texts]);
 
   const handleContentChange = (index, newContent) => {
-    console.log(newContent); // Imprimir el nuevo contenido en la consola
     const newEditableContent = [...editableContent];
     newEditableContent[index].contenido = newContent;
     setEditableContent(newEditableContent);
@@ -56,14 +60,12 @@ const EditorTexto = ({ selectedId, texts }) => {
     const newEditableContent = [...editableContent];
     newEditableContent[index].tipo = selectedTipos[index];
     setEditableContent(newEditableContent);
-    // Devuelve el contenido actualizado para que handleSaveAll pueda recogerlo
-    console.log(newEditableContent[index]); // Imprimir el contenido actualizado en la consola
+    console.log(newEditableContent[index]);
     return newEditableContent[index];
   };
 
   const handleSaveAll = async () => {
     try {
-      // Mapea sobre los elementos y guarda cada elemento actualizado en un array
       const updatedContents = editableContent.map((elemento, index) => {
         return handleSave(index);
       });
@@ -92,22 +94,20 @@ const EditorTexto = ({ selectedId, texts }) => {
   };
 
   const handleAddParagraph = () => {
-    // Añadir un nuevo párrafo al estado editableContent
     setEditableContent((prevContent) => [
       ...prevContent,
       {
-        contenido: "", // Puedes establecer un contenido predeterminado si lo deseas
-        tipo: tipoOptions[0].value, // Puedes establecer un tipo predeterminado si lo deseas
-        alineacion: "izquierda", // Puedes establecer una alineación predeterminada si lo deseas
+        contenido: "",
+        tipo: tipoOptions[0].value,
+        alineacion: "izquierda",
         bold: false,
         italic: false,
         underline: false,
-        autor: "", // Puedes establecer un autor predeterminado si lo deseas
-        paragraphId: generateUniqueId(), // Asegúrate de tener una función que genere un ID único
+        autor: "",
+        paragraphId: generateUniqueId(),
       },
     ]);
 
-    // Si deseas también cambiar el tipo seleccionado al predeterminado del nuevo párrafo, puedes hacerlo aquí
     setSelectedTipos(tipoOptions[0].value);
   };
 
@@ -119,87 +119,46 @@ const EditorTexto = ({ selectedId, texts }) => {
 
   return (
     <>
-      <div className="EditorTexto">
-        {selectedText &&
-          editableContent.map((elemento, index) => (
-            <div key={index}>
-              <div className="header">
-                <div className="id-section">
-                  <Label className="id-label" htmlFor={`id-${index}`}>
-                    ID:
-                  </Label>
-                  <div className="id-value">{elemento.paragraphId}</div>
-                </div>
-                <div className="tipo-autor-section"></div>
-                <div className="tipo-autor-section">
-                  <div className="tipo-section">
-                    <label
-                      className="label-white-text"
-                      htmlFor={`tipo-${index}`}
-                    >
-                      Tipo
-                    </label>
-                    <select
-                      className="tipo-select"
-                      value={selectedTipos[index]}
-                      onChange={(e) => handleTipoChange(index, e.target.value)}
-                    >
-                      {tipoOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="autor-section">
-                    <Label htmlFor={`autor-${index}`}>Autor</Label>
-                    <Textfield
-                      className="autor-textfield"
-                      name={`autor-${index}`}
-                      id={`autor-${index}`}
-                      defaultValue={elemento.autor}
-                      onChange={(e) => {
-                        const newEditableContent = [...editableContent];
-                        newEditableContent[index].autor = e.target.value;
-                        setEditableContent(newEditableContent);
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="editor">
-                <div
-                  style={{
-                    textAlign: elemento.alineacion,
-                    fontWeight: elemento.bold ? "bold" : "normal",
-                    fontStyle: elemento.italic ? "italic" : "normal",
-                    textDecoration: elemento.underline ? "underline" : "none",
-                  }}
-                >
-                  <Textfield
-                    id={`id-${index}`}
-                    className="editable-content"
-                    value={elemento.contenido}
-                    onChange={(e) => handleContentChange(index, e.target.value)}
-                  />
-                </div>
-
-                <Button appearance="primary" onClick={() => handleSave(index)}>
-                  Guardar
-                </Button>
-              </div>
+      
+        <header className="app-header">
+          <Button
+            appearance="primary"
+            shouldFitContainer
+            onClick={handleToggleView}
+          >
+            {viewMode === "editor" ? "Ver Texto Bonito" : "Volver a Editor"}
+          </Button>
+        </header>
+        <div className="view-mode-section">
+        {viewMode === "editor" ? (
+          <div className="EditorTexto">
+            {selectedText &&
+              editableContent.map((elemento, index) => (
+                <ParagraphEditor
+                  key={index}
+                  index={index}
+                  elemento={elemento}
+                  selectedTipos={selectedTipos}
+                  handleTipoChange={handleTipoChange}
+                  handleContentChange={handleContentChange}
+                  handleSave={handleSave}
+                  tipoOptions={tipoOptions} // Make sure you pass tipoOptions
+                  editableContent={editableContent}
+                  setEditableContent={setEditableContent}
+                />
+              ))}
+            <div className="button-section">
+              <Button appearance="primary" onClick={handleAddParagraph}>
+                Añadir nuevo párrafo
+              </Button>
+              <Button appearance="primary" onClick={handleSaveAll}>
+                Guardar Todo
+              </Button>
             </div>
-          ))}
-        <div className="button-section">
-          <Button appearance="primary" onClick={handleAddParagraph}>
-            Añadir nuevo párrafo
-          </Button>
-          <Button appearance="primary" onClick={handleSaveAll}>
-            Guardar Todo
-          </Button>
-        </div>
+          </div>
+        ) : (
+          <VistaBonita paragraphs={editableContent} />
+        )}
       </div>
     </>
   );
