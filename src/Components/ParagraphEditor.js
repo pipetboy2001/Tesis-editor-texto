@@ -13,6 +13,7 @@ const ParagraphEditor = ({
   tipoOptions,
   editableContent,
   setEditableContent,
+  handleDelete, // Nuevo prop para manejar la eliminación
 }) => {
   const { paragraphId, alineacion, bold, italic, underline, contenido, autor } =
     elemento;
@@ -25,6 +26,9 @@ const ParagraphEditor = ({
             ID:
           </Label>
           <div className="id-value">{paragraphId}</div>
+          <Button className="delete-button" onClick={() => handleDelete(paragraphId)}>
+            Eliminar
+          </Button>
         </div>
         <div className="tipo-autor-section"></div>
         <div className="tipo-autor-section">

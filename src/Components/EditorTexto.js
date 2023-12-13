@@ -111,6 +111,14 @@ const EditorTexto = ({ selectedId, texts }) => {
     setSelectedTipos(tipoOptions[0].value);
   };
 
+  const handleDelete = (paragraphId) => {
+    const newEditableContent = editableContent.filter(
+      (elemento) => elemento.paragraphId !== paragraphId
+    );
+    console.log("Eliminado el párrafo con ID:", paragraphId);
+    setEditableContent(newEditableContent);
+  };
+
   const handleTipoChange = (index, selectedValue) => {
     const newSelectedTipos = [...selectedTipos];
     newSelectedTipos[index] = selectedValue;
@@ -119,20 +127,19 @@ const EditorTexto = ({ selectedId, texts }) => {
 
   return (
     <>
-      
-        <header className="app-header">
-          <Button
-            appearance="primary"
-            shouldFitContainer
-            onClick={handleToggleView}
-          >
-            {viewMode === "editor" ? "Ver Texto Bonito" : "Volver a Editor"}
-          </Button>
-        </header>
-        <div className="view-mode-section">
+      <header className="app-header">
+        <Button
+          appearance="primary"
+          shouldFitContainer
+          onClick={handleToggleView}
+        >
+          {viewMode === "editor" ? "Ver Texto Bonito" : "Volver a Editor"}
+        </Button>
+      </header>
+      <div className="view-mode-section">
         {viewMode === "editor" ? (
           <div className="EditorTexto">
-            {selectedText &&
+            {selectedText && editableContent.length > 0 ? (
               editableContent.map((elemento, index) => (
                 <ParagraphEditor
                   key={index}
@@ -142,11 +149,15 @@ const EditorTexto = ({ selectedId, texts }) => {
                   handleTipoChange={handleTipoChange}
                   handleContentChange={handleContentChange}
                   handleSave={handleSave}
-                  tipoOptions={tipoOptions} // Make sure you pass tipoOptions
+                  handleDelete={handleDelete}
+                  tipoOptions={tipoOptions}
                   editableContent={editableContent}
                   setEditableContent={setEditableContent}
                 />
-              ))}
+              ))
+            ) : (
+              <p>No hay párrafos disponibles.</p>
+            )}
             <div className="button-section">
               <Button appearance="primary" onClick={handleAddParagraph}>
                 Añadir nuevo párrafo
