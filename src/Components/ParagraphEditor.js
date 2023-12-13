@@ -2,6 +2,9 @@ import React from "react";
 import Button from "@atlaskit/button";
 import { Label } from "@atlaskit/form";
 import Textfield from "@atlaskit/textfield";
+import TrashIcon from "@atlaskit/icon/glyph/trash";
+import CommentIcon from "@atlaskit/icon/glyph/comment";
+import MentionIcon from "@atlaskit/icon/glyph/mention";
 
 const ParagraphEditor = ({
   index,
@@ -26,14 +29,16 @@ const ParagraphEditor = ({
             ID:
           </Label>
           <div className="id-value">{paragraphId}</div>
-          <Button className="delete-button" onClick={() => handleDelete(paragraphId)}>
+          <Button onClick={() => handleDelete(paragraphId)} appearance="danger">
+            <TrashIcon size="small" />
             Eliminar
           </Button>
         </div>
         <div className="tipo-autor-section"></div>
         <div className="tipo-autor-section">
           <div className="tipo-section">
-            <label className="label-white-text" htmlFor={`tipo-${index}`}>
+            <label htmlFor={`tipo-${index}`}>
+              <CommentIcon size="small" />
               Tipo
             </label>
             <select
@@ -50,7 +55,10 @@ const ParagraphEditor = ({
           </div>
 
           <div className="autor-section">
-            <Label htmlFor={`autor-${index}`}>Autor</Label>
+            <Label htmlFor={`autor-${index}`}>
+              <MentionIcon size="small" />
+              Autor
+            </Label>
             <Textfield
               className="autor-textfield"
               name={`autor-${index}`}
@@ -82,10 +90,6 @@ const ParagraphEditor = ({
             onChange={(e) => handleContentChange(index, e.target.value)}
           />
         </div>
-
-        <Button appearance="primary" onClick={() => handleSave(index)}>
-          Guardar
-        </Button>
       </div>
     </div>
   );

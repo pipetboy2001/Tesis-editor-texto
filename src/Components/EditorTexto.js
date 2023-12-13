@@ -8,6 +8,10 @@ import ParagraphEditor from "./ParagraphEditor";
 import VistaBonita from "./VistaBonita";
 import "./../Styles/EditorTexto.css";
 
+import AddIcon from '@atlaskit/icon/glyph/add'
+import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done'
+import WatchIcon from '@atlaskit/icon/glyph/watch'
+
 const tipoOptions = [
   { label: "Compromiso", value: "compromiso" },
   { label: "Desacuerdo", value: "desacuerdo" },
@@ -133,7 +137,8 @@ const EditorTexto = ({ selectedId, texts }) => {
           shouldFitContainer
           onClick={handleToggleView}
         >
-          {viewMode === "editor" ? "Ver Texto Bonito" : "Volver a Editor"}
+          <WatchIcon size="small" />
+          {viewMode === "editor" ? " Ver Texto Bonito" : " Volver a Editor"}
         </Button>
       </header>
       <div className="view-mode-section">
@@ -160,9 +165,11 @@ const EditorTexto = ({ selectedId, texts }) => {
             )}
             <div className="button-section">
               <Button appearance="primary" onClick={handleAddParagraph}>
+                <AddIcon size="small" />
                 Añadir nuevo párrafo
               </Button>
               <Button appearance="primary" onClick={handleSaveAll}>
+                <EditorDoneIcon size="small" />
                 Guardar Todo
               </Button>
             </div>

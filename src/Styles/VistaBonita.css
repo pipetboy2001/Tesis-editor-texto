@@ -20,6 +20,9 @@
   .paragraph-author {
     color: #555;
     margin-right: 10px;
+    /* en negrita*/
+    font-weight: bold;
+
     /* Ajusta el estilo del autor según tus preferencias */
   }
   
@@ -27,3 +30,10 @@
     /* Ajusta el estilo del contenido según tus preferencias */
   }
   
+  .Titulo-tipo{
+    flex: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
