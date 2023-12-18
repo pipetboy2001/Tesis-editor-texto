@@ -47,10 +47,12 @@ module.exports = {
       favicon: "./public/favicon.ico",
     }),
     new ModuleFederationPlugin({
-      name: "HeaderApp",
+      name: "mf_editor_texto",
       filename: "remoteEntry.js",
       exposes: {
-        "./Header": "./src/App",
+        "./App": "./src/App",
+        "./EditorTexto": "./src/Components/EditorTexto",
+        "./IdSelector": "./src/Components/IdSelector",
       },
       shared: {
         ...dependencies,
