@@ -1,81 +1,62 @@
 /* EditorTexto.css */
+
+/* Contenedor principal */
 .EditorTexto {
-    
-    margin: auto;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .header {
-    background-color: #ADD8E6;
-    color: #fff;
-    padding: 10px;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    gap: 1px 0px;
-    grid-template-areas:
-      "id-section tipo-autor-section";
-  }
-  
-  .id-section {
-    grid-area: id-section;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .id-label {
-    margin-right: 5px;
-  }
-  
-  .id-value {
-    margin-top: 5px; /* Ajusta el espacio entre el ID y el borde superior del contenedor */
-  }
-  
-  .tipo-autor-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0px 1px;
-    grid-template-areas:
-      "tipo-section autor-section";
-  }
-  
-  .tipo-section,
-  .autor-section {
-    padding: 10px;
-    color: #6b778c;
-  }
-    
-  .editor {
-    padding: 10px;
-  }
-  /* EditorTexto.css */
+  margin: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Encabezado */
+.header {
+  background-color: #ADD8E6;
+  color: #fff;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  gap: 1px 0px;
+  grid-template-areas: "id-section tipo-autor-section";
+}
+
+.id-section {
+  grid-area: id-section;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.id-label {
+  margin-right: 5px;
+}
+
+/* Editor de texto */
+.editor {
+  padding: 10px;
+}
+
 .editor Button {
-    width: 100%; /* Haz que el botón ocupe el 100% del ancho disponible */
-  }
-  
+  width: 100%;
+}
 
-  /* EditorTexto.css */
 .editor span[contentEditable=true] {
-    min-height: 80px; /* Ajusta la altura mínima según tus preferencias */
-    display: block; /* Hace que el span ocupe todo el ancho disponible */
-    margin-bottom: 10px; /* Ajusta el margen inferior según tus preferencias */
-    overflow-y: auto; /* Agrega barras de desplazamiento vertical si el contenido excede la altura */
-    white-space: pre-wrap; /* Mantiene los saltos de línea */
-    word-wrap: break-word; /* Evita que las palabras largas se salgan del contenedor */
+  min-height: 80px;
+  display: block;
+  margin-bottom: 10px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
 
-  }
-  
-  
-  .footer {
-    padding: 5px;
-    text-align: center;
-  }
-  
+/* Pie de página */
+.footer {
+  padding: 5px;
+  text-align: center;
+}
 
-  .button-section {
+/* Sección de botones */
+.button-section {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -87,40 +68,89 @@
   width: 40%;
 }
 
+/* Sección de tipo */
 .tipo-section {
-    padding: 10px;
-  }
-  
-  .tipo-select {
-    width: 100%; /* Ajusta el ancho del select al 100% */
-    height: 50%;
-    margin-top: 5px; /* Agrega espacio entre la etiqueta y el select */
-  }
+  padding: 10px;
+}
 
-  .app-header {
-    width: 60%;
-    margin: auto;
-    border: 1px solid #ccc;
-    position: sticky;
-    top: 0;
-    background-color: #f0f0f0;
-    padding: 10px;
-    z-index: 1000;
-    box-sizing: border-box; /* Asegura un modelo de caja consistente */
-  }
-  
+.tipo-select {
+  width: 100%;
+  height: 50%;
+  margin-top: 5px;
+}
 
-  .view-mode-section {
-    width: 60%;
-    margin: auto;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .app-content {
-    padding: 20px;
-    margin-top: 70px; /* Ajusta según la altura de tu encabezado */
-  }
+/* Encabezado de la aplicación */
+.app-header {
+  width: 60%;
+  margin: auto;
+  border: 1px solid #ccc;
+  position: sticky;
+  top: 0;
+  background-color: #f0f0f0;
+  padding: 10px;
+  z-index: 1000;
+  box-sizing: border-box;
+}
 
-  
+/* Sección de modo de vista */
+.view-mode-section {
+  width: 60%;
+  margin: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Contenido de la aplicación */
+.app-content {
+  padding: 20px;
+  margin-top: 70px;
+}
+
+
+
+
+/*seccion de ingresar texto plano y que luego se divide*/
+/* EditorTexto.css */
+
+/* Estilo para el mensaje cuando no hay párrafos disponibles */
+.no-paragraphs-message {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* Estilo para el contenedor de ingreso de texto */
+.add-paragraph-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Estilo para el textarea */
+.paragraph-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  resize: vertical; /* Permite redimensionar verticalmente el textarea */
+}
+
+/* Estilo para el botón de procesar párrafos */
+.process-paragraphs-button {
+  font-size: 16px;
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.process-paragraphs-button:hover {
+  background-color: #45a049;
+}

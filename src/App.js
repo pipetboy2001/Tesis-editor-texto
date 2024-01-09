@@ -11,7 +11,8 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://172.111.10.181:8000/text");
+        //const response = await fetch("http://172.111.10.181:8000/text");
+        const response = await fetch("http://localhost:8000/text");
         if (!response.ok) {
           throw new Error(`Error al obtener textos: ${response.statusText}`);
         }

@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+// ... (resto de las importaciones)
+
 import Button from "@atlaskit/button";
 import Select from "@atlaskit/select";
 import { Label } from "@atlaskit/form";
 import Textfield from "@atlaskit/textfield";
+import Textarea from "@atlaskit/textfield";
 import { v4 as uuidv4 } from "uuid";
 import ParagraphEditor from "./ParagraphEditor";
 import VistaBonita from "./VistaBonita";
 import "./../Styles/EditorTexto.css";
 
-import AddIcon from '@atlaskit/icon/glyph/add'
-import EditorDoneIcon from '@atlaskit/icon/glyph/editor/done'
-import WatchIcon from '@atlaskit/icon/glyph/watch'
+import AddIcon from "@atlaskit/icon/glyph/add";
+import EditorDoneIcon from "@atlaskit/icon/glyph/editor/done";
+import WatchIcon from "@atlaskit/icon/glyph/watch";
 
 const tipoOptions = [
   { label: "Compromiso", value: "compromiso" },
@@ -54,6 +57,20 @@ const EditorTexto = ({ selectedId, texts }) => {
     );
   }, [selectedId, texts]);
 
+  const handleProcessParagraphs = () => {
+    const inputText = paragraphsInputRef.current.value;
+    const paragraphs = inputText.split('\n');
+    
+    paragraphs.forEach((paragraph) => {
+      handleAddParagraph(paragraph.trim());
+    });
+
+    // Limpiar el contenido del textarea después de procesar los párrafos
+    paragraphsInputRef.current.value = "";
+  };
+
+  const paragraphsInputRef = useRef(null);
+
   const handleContentChange = (index, newContent) => {
     const newEditableContent = [...editableContent];
     newEditableContent[index].contenido = newContent;
@@ -75,7 +92,8 @@ const EditorTexto = ({ selectedId, texts }) => {
       });
 
       const response = await fetch(
-        `http://172.111.10.181:8000/text/update/${selectedText._id}`,
+        //`http://172.111.10.181:8000/text/update/${selectedText._id}`,
+        `http://localhost:8000/text/update/${selectedText._id}`,
         {
           method: "PUT",
           headers: {
@@ -97,17 +115,17 @@ const EditorTexto = ({ selectedId, texts }) => {
     }
   };
 
-  const handleAddParagraph = () => {
+  const handleAddParagraph = (newParagraph) => {
     setEditableContent((prevContent) => [
       ...prevContent,
       {
-        contenido: "",
-        tipo: tipoOptions[0].value,
-        alineacion: "izquierda",
+        contenido: newParagraph,
+        tipo: tipoOptions[0].value, // Puedes ajustar esto según tus necesidades
+        alineacion: "izquierda", // Puedes ajustar esto según tus necesidades
         bold: false,
         italic: false,
         underline: false,
-        autor: "",
+        autor: "", // Puedes ajustar esto según tus necesidades
         paragraphId: generateUniqueId(),
       },
     ]);
@@ -161,13 +179,25 @@ const EditorTexto = ({ selectedId, texts }) => {
                 />
               ))
             ) : (
-              <p>No hay párrafos disponibles.</p>
+              <>
+                <div className="add-paragraph-container">
+                  <Label label="Ingresar texto con varios párrafos:" />
+                  <textarea
+                    className="paragraph-input"
+                    placeholder="Escribe aquí..."
+                    ref={paragraphsInputRef}
+                  />
+                  <Button
+                    appearance="primary"
+                    className="process-paragraphs-button"
+                    onClick={handleProcessParagraphs}
+                  >
+                    Procesar Párrafos
+                  </Button>
+                </div>
+              </>
             )}
             <div className="button-section">
-              <Button appearance="primary" onClick={handleAddParagraph}>
-                <AddIcon size="small" />
-                Añadir nuevo párrafo
-              </Button>
               <Button appearance="primary" onClick={handleSaveAll}>
                 <EditorDoneIcon size="small" />
                 Guardar Todo
