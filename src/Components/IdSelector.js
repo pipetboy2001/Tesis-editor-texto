@@ -124,7 +124,7 @@ const IdSelector = ({ onIdSelect }) => {
             </Button>
 
             <Button
-              appearance="subtle"
+              appearance="danger"
               onClick={(event) => handleDelete(id, event)}
             >
               Eliminar

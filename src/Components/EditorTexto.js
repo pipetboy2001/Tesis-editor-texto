@@ -59,8 +59,8 @@ const EditorTexto = ({ selectedId, texts }) => {
 
   const handleProcessParagraphs = () => {
     const inputText = paragraphsInputRef.current.value;
-    const paragraphs = inputText.split('\n');
-    
+    const paragraphs = inputText.split("\n");
+
     paragraphs.forEach((paragraph) => {
       handleAddParagraph(paragraph.trim());
     });
