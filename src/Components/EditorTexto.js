@@ -15,12 +15,12 @@ import AddIcon from "@atlaskit/icon/glyph/add";
 import EditorDoneIcon from "@atlaskit/icon/glyph/editor/done";
 import WatchIcon from "@atlaskit/icon/glyph/watch";
 
-const tipoOptions = [
+/* const tipoOptions = [
   { label: "Compromiso", value: "compromiso" },
   { label: "Desacuerdo", value: "desacuerdo" },
   { label: "Duda", value: "duda" },
   { label: "Acuerdo", value: "acuerdo" },
-];
+]; */
 
 const generateUniqueId = () => {
   return uuidv4();
@@ -109,8 +109,10 @@ const EditorTexto = ({ selectedId, texts }) => {
 
       if (response.ok) {
         console.log("¡Guardado todo con éxito!");
+        alert('Guardado todo con éxito');
       } else {
         console.error("Error al guardar todo");
+        alert('Error al guardar todo');
       }
     } catch (error) {
       console.error("Error al guardar todo:", error);
@@ -122,26 +124,23 @@ const EditorTexto = ({ selectedId, texts }) => {
       ...prevContent,
       {
         contenido: newParagraph,
-        alineacion: "izquierda", 
+        alineacion: "izquierda",
         bold: false,
         italic: false,
         underline: false,
         autor: "", // Puedes ajustar esto según tus necesidades
         paragraphId: generateUniqueId(),
-        tipo: tipoOptions[0].value,
+        tipo: "compromiso",
         sentimiento: "???", // Puedes ajustar esto según tus necesidades.
         orden: prevContent.length + 1,
       },
     ]);
-
-    setSelectedTipos(tipoOptions[0].value);
   };
 
   const handleDelete = (paragraphId) => {
     const newEditableContent = editableContent.filter(
       (elemento) => elemento.paragraphId !== paragraphId
     );
-    console.log("Eliminado el párrafo con ID:", paragraphId);
     setEditableContent(newEditableContent);
   };
 
@@ -177,7 +176,7 @@ const EditorTexto = ({ selectedId, texts }) => {
                   handleContentChange={handleContentChange}
                   handleSave={handleSave}
                   handleDelete={handleDelete}
-                  tipoOptions={tipoOptions}
+                  //tipoOptions={tipoOptions}
                   editableContent={editableContent}
                   setEditableContent={setEditableContent}
                 />

@@ -89,6 +89,7 @@ const IdSelector = ({ onIdSelect }) => {
       if (!response.ok) {
         throw new Error(`Error al crear el texto: ${response.statusText}`);
       }
+      window.location.reload();
 
       const data = await response.json();
       const ids = [...databaseIds, data.text._id];
