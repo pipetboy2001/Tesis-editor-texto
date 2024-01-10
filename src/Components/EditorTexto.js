@@ -10,10 +10,11 @@ import { v4 as uuidv4 } from "uuid";
 import ParagraphEditor from "./ParagraphEditor";
 import VistaBonita from "./VistaBonita";
 import "./../Styles/EditorTexto.css";
-
-import AddIcon from "@atlaskit/icon/glyph/add";
 import EditorDoneIcon from "@atlaskit/icon/glyph/editor/done";
 import WatchIcon from "@atlaskit/icon/glyph/watch";
+
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 /* const tipoOptions = [
   { label: "Compromiso", value: "compromiso" },
@@ -109,10 +110,10 @@ const EditorTexto = ({ selectedId, texts }) => {
 
       if (response.ok) {
         console.log("¡Guardado todo con éxito!");
-        alert('Guardado todo con éxito');
+        alert("Guardado todo con éxito");
       } else {
         console.error("Error al guardar todo");
-        alert('Error al guardar todo');
+        alert("Error al guardar todo");
       }
     } catch (error) {
       console.error("Error al guardar todo:", error);
@@ -208,7 +209,9 @@ const EditorTexto = ({ selectedId, texts }) => {
             </div>
           </div>
         ) : (
-          <VistaBonita paragraphs={editableContent} />
+          <DndProvider backend={HTML5Backend}>
+            <VistaBonita paragraphs={editableContent} selectedText={selectedText} selectedId={selectedId} />
+          </DndProvider>
         )}
       </div>
     </>

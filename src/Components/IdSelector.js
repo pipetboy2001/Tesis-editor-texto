@@ -30,7 +30,7 @@ const IdSelector = ({ onIdSelect }) => {
 
   const handleIdSelect = (id) => {
     onIdSelect(id);
-    console.log("ID seleccionado: ", id);
+    
   };
   const handleDelete = async (id, event) => {
     try {

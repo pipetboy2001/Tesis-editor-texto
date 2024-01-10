@@ -35,8 +35,7 @@ const ParagraphEditor = ({
     cerrarModal();
   };
 
-  /* Console.log para obtener todos los elementos*/
-  //console.log(editableContent);
+
 
   return (
     <div key={index}>
