@@ -49,6 +49,8 @@ const EditorTexto = ({ selectedId, texts }) => {
         underline: elemento.underline,
         autor: elemento.autor,
         paragraphId: elemento._id,
+        sentimiento: elemento.sentimiento,
+        orden: elemento.orden,
       })) || []
     );
 
@@ -120,13 +122,15 @@ const EditorTexto = ({ selectedId, texts }) => {
       ...prevContent,
       {
         contenido: newParagraph,
-        tipo: tipoOptions[0].value, // Puedes ajustar esto según tus necesidades
-        alineacion: "izquierda", // Puedes ajustar esto según tus necesidades
+        alineacion: "izquierda", 
         bold: false,
         italic: false,
         underline: false,
         autor: "", // Puedes ajustar esto según tus necesidades
         paragraphId: generateUniqueId(),
+        tipo: tipoOptions[0].value,
+        sentimiento: "???", // Puedes ajustar esto según tus necesidades.
+        orden: prevContent.length + 1,
       },
     ]);
 

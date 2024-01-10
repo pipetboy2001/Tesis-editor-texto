@@ -44,7 +44,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./public/index.html",
-      favicon: "./public/favicon.ico",
+      favicon: "./public/Text-editor.ico",
     }),
     new ModuleFederationPlugin({
       name: "mf_editor_texto",

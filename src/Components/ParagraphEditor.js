@@ -11,16 +11,12 @@ import MentionIcon from "@atlaskit/icon/glyph/mention";
 const ParagraphEditor = ({
   index,
   elemento,
-  selectedTipos,
-  handleTipoChange,
   handleContentChange,
-  handleSave,
-  tipoOptions,
   editableContent,
   setEditableContent,
   handleDelete, // Nuevo prop para manejar la eliminación
 }) => {
-  const { paragraphId, alineacion, bold, italic, underline, contenido, autor } =
+  const { paragraphId, alineacion, bold, italic, underline, contenido, autor, tipo, sentimiento, orden } =
     elemento;
 
   const [showModal, setShowModal] = useState(false);
@@ -38,6 +34,9 @@ const ParagraphEditor = ({
     handleContentChange(index, nuevoContenido);
     cerrarModal();
   };
+
+  /* Console.log para obtener todos los elementos*/
+  console.log(editableContent);
 
   return (
     <div key={index}>
@@ -64,12 +63,14 @@ const ParagraphEditor = ({
               pattern="[0-9]*"
               inputMode="numeric"
               id={`id-${index}`}
-              //value={numero}
+              name={`id-${index}`}
+              defaultValue={orden}
               onChange={(e) => {
                 const newEditableContent = [...editableContent];
-                newEditableContent[index].numero = e.target.value;
+                newEditableContent[index].orden = e.target.value;
                 setEditableContent(newEditableContent);
               }}
+              
             />
           </div>
 
@@ -99,10 +100,9 @@ const ParagraphEditor = ({
               className="tipo-textfield"
               name={`tipo-${index}`}
               id={`tipo-${index}`}
-              defaultValue={selectedTipos[index]}
+              defaultValue={tipo}
               isReadOnly // Esta propiedad hace que el Textfield sea de solo lectura
               isDisabled
-              disabledAppearance="#fff"
             />
           </div>
 
@@ -115,7 +115,8 @@ const ParagraphEditor = ({
               className="sentimiento-textfield"
               name={`sentimiento-${index}`}
               id={`sentimiento-${index}`}
-              defaultValue="no hay sentimiento"
+              defaultValue={sentimiento}
+              
               isReadOnly // Esta propiedad hace que el Textfield sea de solo lectura
               isDisabled
             />
