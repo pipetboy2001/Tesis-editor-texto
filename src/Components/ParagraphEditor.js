@@ -16,8 +16,18 @@ const ParagraphEditor = ({
   setEditableContent,
   handleDelete, // Nuevo prop para manejar la eliminación
 }) => {
-  const { paragraphId, alineacion, bold, italic, underline, contenido, autor, tipo, sentimiento, orden } =
-    elemento;
+  const {
+    paragraphId,
+    alineacion,
+    bold,
+    italic,
+    underline,
+    contenido,
+    autor,
+    tipo,
+    sentimiento,
+    orden,
+  } = elemento;
 
   const [showModal, setShowModal] = useState(false);
   const [nuevoContenido, setNuevoContenido] = useState(contenido);
@@ -34,8 +44,6 @@ const ParagraphEditor = ({
     handleContentChange(index, nuevoContenido);
     cerrarModal();
   };
-
-
 
   return (
     <div key={index}>
@@ -56,20 +64,23 @@ const ParagraphEditor = ({
             <Label className="id-label" htmlFor={`id-${index}`}>
               Orden:
             </Label>
-            <Textfield
+            <input
               className="id-value"
               type="number"
-              pattern="[0-9]*"
               inputMode="numeric"
               id={`id-${index}`}
               name={`id-${index}`}
-              defaultValue={orden}
+              value={orden}
               onChange={(e) => {
+                const inputValue = parseInt(e.target.value, 10); // Parsea el valor a entero
                 const newEditableContent = [...editableContent];
-                newEditableContent[index].orden = e.target.value;
+
+                // Asegura que el valor sea un número positivo
+                newEditableContent[index].orden =
+                  isNaN(inputValue) || inputValue <= 0 ? 1 : inputValue;
+
                 setEditableContent(newEditableContent);
               }}
-              
             />
           </div>
 
@@ -115,7 +126,6 @@ const ParagraphEditor = ({
               name={`sentimiento-${index}`}
               id={`sentimiento-${index}`}
               defaultValue={sentimiento}
-              
               isReadOnly // Esta propiedad hace que el Textfield sea de solo lectura
               isDisabled
             />
