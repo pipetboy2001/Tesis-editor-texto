@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import Button from "@atlaskit/button";
 import { Label } from "@atlaskit/form";
 import Textfield from "@atlaskit/textfield";
-import Modal from "react-bootstrap/Modal";
-import ButtonBootstrap from "react-bootstrap/Button";
-import TrashIcon from "@atlaskit/icon/glyph/trash";
 import CommentIcon from "@atlaskit/icon/glyph/comment";
 import MentionIcon from "@atlaskit/icon/glyph/mention";
+import ModalEditarContenido from "./ModalEditar";
 
 const ParagraphEditor = ({
   index,
@@ -46,17 +44,14 @@ const ParagraphEditor = ({
   };
 
   return (
-    <div key={index}>
-      <div className="header">
+    <div key={index} className="EditorTexto">
+      <div className="header-section">
         <div className="id-section">
           <div className="action-buttons">
             <Button appearance="primary" onClick={abrirModal}>
               Editar
             </Button>
-            <Button
-              onClick={() => handleDelete(paragraphId)}
-              appearance="danger"
-            >
+            <Button onClick={() => handleDelete(paragraphId)} appearance="danger">
               Borrar
             </Button>
           </div>
@@ -72,18 +67,14 @@ const ParagraphEditor = ({
               name={`id-${index}`}
               value={orden}
               onChange={(e) => {
-                const inputValue = parseInt(e.target.value, 10); // Parsea el valor a entero
+                const inputValue = parseInt(e.target.value, 10);
                 const newEditableContent = [...editableContent];
-
-                // Asegura que el valor sea un número positivo
-                newEditableContent[index].orden =
-                  isNaN(inputValue) || inputValue <= 0 ? 1 : inputValue;
-
+                newEditableContent[index].orden = isNaN(inputValue) || inputValue <= 0 ? 1 : inputValue;
                 setEditableContent(newEditableContent);
               }}
             />
           </div>
-
+  
           <div className="autor-info">
             <Label htmlFor={`autor-${index}`}>
               <MentionIcon size="small" />
@@ -111,11 +102,11 @@ const ParagraphEditor = ({
               name={`tipo-${index}`}
               id={`tipo-${index}`}
               defaultValue={tipo}
-              isReadOnly // Esta propiedad hace que el Textfield sea de solo lectura
+              isReadOnly
               isDisabled
             />
           </div>
-
+  
           <div className="sentimiento-info">
             <label htmlFor={`sentimiento-${index}`}>
               {/* <SentimientoIcon size="small" /> */}
@@ -126,13 +117,13 @@ const ParagraphEditor = ({
               name={`sentimiento-${index}`}
               id={`sentimiento-${index}`}
               defaultValue={sentimiento}
-              isReadOnly // Esta propiedad hace que el Textfield sea de solo lectura
+              isReadOnly
               isDisabled
             />
           </div>
         </div>
       </div>
-
+  
       <div className="editor">
         <div
           style={{
@@ -147,32 +138,23 @@ const ParagraphEditor = ({
           {contenido}
         </div>
       </div>
-
+  
       {/* Modal de edición de Bootstrap */}
-      <Modal show={showModal} onHide={cerrarModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Editar Contenido</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <label>Nuevo Contenido:</label>
-          <input
-            type="text"
-            className="form-control"
-            value={nuevoContenido}
-            onChange={(e) => setNuevoContenido(e.target.value)}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <ButtonBootstrap variant="primary" onClick={guardarCambios}>
-            Guardar
-          </ButtonBootstrap>
-          <ButtonBootstrap variant="secondary" onClick={cerrarModal}>
-            Cancelar
-          </ButtonBootstrap>
-        </Modal.Footer>
-      </Modal>
+      <ModalEditarContenido
+        showModal={showModal}
+        onClose={() => setShowModal(false)}
+        onGuardar={(nuevoContenido) => {
+          handleContentChange(index, nuevoContenido);
+          setShowModal(false);
+        }}
+        valorInicial={contenido}
+        bold={bold}
+        italic={italic}
+        underline={underline}
+        alineacion={alineacion}
+      />
     </div>
   );
-};
+}  
 
 export default ParagraphEditor;

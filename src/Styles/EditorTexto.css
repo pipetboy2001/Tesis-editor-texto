@@ -9,7 +9,7 @@
 }
 
 /* Encabezado */
-.header {
+.header-section {
   background-color: #ADD8E6;
   color: #6b778c;
   padding: 10px;
@@ -106,13 +106,6 @@
   padding: 20px;
   margin-top: 70px;
 }
-
-
-
-
-
-/*seccion de ingresar texto plano y que luego se divide*/
-/* EditorTexto.css */
 
 /* Estilo para el mensaje cuando no hay párrafos disponibles */
 .no-paragraphs-message {

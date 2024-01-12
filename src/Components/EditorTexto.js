@@ -93,17 +93,19 @@ const EditorTexto = ({ selectedId, texts }) => {
       const updatedContents = editableContent.map((elemento, index) => {
         return handleSave(index);
       });
-  
+
       // Verificar si hay números de orden duplicados
       const ordenes = updatedContents.map((elemento) => elemento.orden);
-      const duplicados = ordenes.some((orden, index) => ordenes.indexOf(orden) !== index);
-  
+      const duplicados = ordenes.some(
+        (orden, index) => ordenes.indexOf(orden) !== index
+      );
+
       if (duplicados) {
         console.error("Error al guardar: Hay números de orden duplicados");
         alert("Error al guardar: Hay números de orden duplicados");
         return;
       }
-  
+
       const response = await fetch(
         //`http://172.111.10.181:8000/text/update/${selectedText._id}`,
         `http://localhost:8000/text/update/${selectedText._id}`,
@@ -117,7 +119,7 @@ const EditorTexto = ({ selectedId, texts }) => {
           }),
         }
       );
-  
+
       if (response.ok) {
         console.log("¡Guardado todo con éxito!");
         alert("Guardado todo con éxito");
@@ -129,7 +131,6 @@ const EditorTexto = ({ selectedId, texts }) => {
       console.error("Error al guardar todo:", error);
     }
   };
-  
 
   const handleAddParagraph = (newParagraph) => {
     setEditableContent((prevContent) => [
@@ -220,9 +221,11 @@ const EditorTexto = ({ selectedId, texts }) => {
             </div>
           </div>
         ) : (
-          <DndProvider backend={HTML5Backend}>
-            <VistaBonita paragraphs={editableContent} selectedText={selectedText} selectedId={selectedId} />
-          </DndProvider>
+          <VistaBonita
+            paragraphs={editableContent}
+            selectedText={selectedText}
+            selectedId={selectedId}
+          />
         )}
       </div>
     </>
