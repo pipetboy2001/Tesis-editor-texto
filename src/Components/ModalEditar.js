@@ -4,8 +4,20 @@ import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import ButtonBootstrap from 'react-bootstrap/Button';
 
-const ModalEditarContenido = ({ showModal, onClose, onGuardar, valorInicial, bold, italic, underline, alineacion }) => {
-    const [nuevoContenido, setNuevoContenido] = useState(valorInicial);
+const ModalEditarContenido = ({
+  showModal,
+  onClose,
+  onGuardar,
+  valorInicial,
+  bold,
+  italic,
+  underline,
+  alineacion,
+  orden, // Receive orden as prop
+  tipo,  // Receive tipo as prop
+}) => {
+  const [nuevoContenido, setNuevoContenido] = useState(valorInicial);
+
   
     const handleChange = (e) => {
       setNuevoContenido(e.target.value);
@@ -14,8 +26,9 @@ const ModalEditarContenido = ({ showModal, onClose, onGuardar, valorInicial, bol
     return (
       <Modal show={showModal} onHide={onClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Editar Contenido</Modal.Title>
-        </Modal.Header>
+        {/* Use orden and tipo in the title */}
+        <Modal.Title>{`${orden} - ${tipo}`}</Modal.Title>
+      </Modal.Header>
         <Modal.Body>
          
           <label>Modificar Contenido:</label>

@@ -1,27 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-// ... (resto de las importaciones)
-
 import Button from "@atlaskit/button";
-import Select from "@atlaskit/select";
 import { Label } from "@atlaskit/form";
-import Textfield from "@atlaskit/textfield";
-import Textarea from "@atlaskit/textfield";
 import { v4 as uuidv4 } from "uuid";
 import ParagraphEditor from "./ParagraphEditor";
 import VistaBonita from "./VistaBonita";
 import "./../Styles/EditorTexto.css";
 import EditorDoneIcon from "@atlaskit/icon/glyph/editor/done";
 import WatchIcon from "@atlaskit/icon/glyph/watch";
-
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-
-/* const tipoOptions = [
-  { label: "Compromiso", value: "compromiso" },
-  { label: "Desacuerdo", value: "desacuerdo" },
-  { label: "Duda", value: "duda" },
-  { label: "Acuerdo", value: "acuerdo" },
-]; */
 
 const generateUniqueId = () => {
   return uuidv4();

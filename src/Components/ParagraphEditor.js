@@ -152,6 +152,8 @@ const ParagraphEditor = ({
         italic={italic}
         underline={underline}
         alineacion={alineacion}
+        orden={orden} // Pass orden to ModalEditarContenido
+        tipo={tipo}   // Pass tipo to ModalEditarContenido
       />
     </div>
   );

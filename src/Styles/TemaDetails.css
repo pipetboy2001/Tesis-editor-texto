@@ -1,0 +1,17 @@
+/* TemaDetails.css */
+
+.tema-container {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .elementos-container {
+    margin-left: 20px;
+  }
+  
+  .elemento-container {
+    margin-bottom: 5px;
+  }
+  

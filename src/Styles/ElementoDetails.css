@@ -1,0 +1,21 @@
+.elemento-container {
+    border: 1px solid #ddd; /* Agrega un borde para separar visualmente los elementos */
+    border-radius: 5px; /* Agrega esquinas redondeadas */
+    padding: 10px; /* Añade algún espaciado para mayor claridad */
+    /* background-color: #226e93; Color celeste */
+    background-color: #ADD8E6;
+    color: #333; /* Letras blancas */
+}
+
+/* Estilo para el sector del contenido */
+.elemento-container .contenido-section {
+    background-color: #fff; /* Fondo blanco */
+    color: #333; /* Letras negras */
+    padding: 10px; /* Añade espaciado para mayor claridad */
+}
+
+
+.elemento-container-dragging {
+    border: 2px dashed #aaa; /* Un borde punteado o algún estilo visual para indicar que está siendo arrastrado */
+  }
+  

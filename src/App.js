@@ -1,7 +1,10 @@
 // App.js
 import React, { useState, useEffect } from "react";
 import IdSelector from "./Components/IdSelector";
-import TextEditor from "./Components/EditorTexto";
+import Testing from "./Components/Testing";
+
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const App = () => {
   const [selectedId, setSelectedId] = useState(null);
@@ -38,7 +41,18 @@ const App = () => {
       <div className="App">
         {selectedId ? (
           // Modo de edición con el ID seleccionado
-          <TextEditor selectedId={selectedId} texts={texts} />
+
+          // Agrega el proveedor de arrastrar y soltar
+          // y pasa el backend de HTML5 como parámetro
+
+          <DndProvider backend={HTML5Backend}>
+            <Testing
+              selectedId={selectedId}
+              texts={texts}
+              setTexts={setTexts} // Pasa la función para actualizar los textos
+            />
+          </DndProvider>
+          
         ) : (
           // Modo de selección de ID
           <IdSelector

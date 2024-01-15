@@ -82,6 +82,7 @@ const IdSelector = ({ onIdSelect }) => {
 
   const handleNewDocument = async () => {
     try {
+      // Create a new text document
       const response = await fetch("http://localhost:8000/text/create", {
         method: "POST",
       });
@@ -89,27 +90,61 @@ const IdSelector = ({ onIdSelect }) => {
       if (!response.ok) {
         throw new Error(`Error al crear el texto: ${response.statusText}`);
       }
-      window.location.reload();
 
       const data = await response.json();
-      const ids = [...databaseIds, data.text._id];
-      setDatabaseIds(ids);
-      setTexts([...texts, data.text]);
+      const newText = data.text;
+
+      
+
+      // Create a default theme with elements
+      const defaultTheme = {
+        tema: "Introduction",
+        id_tema: "123",
+        elementos: [
+          {
+            contenido: "Introduction to the topic",
+            alineacion: "left",
+            bold: false,
+            italic: true,
+            underline: false,
+            tipo: "paragraph",
+            autor: "Jane Doe",
+            sentimiento: "positive",
+            orden: 2,
+          },
+        ],
+      };
+
+      // Set temas for the new document
+      newText.temas = [defaultTheme];
+
+      // Set the id_reunion for the new document
+      newText.id_reunion = "1"; // Replace with the actual id_reunion value
+
+      
+
+     // Update the state and log the updated state immediately
+     setDatabaseIds(prevIds => [...prevIds, newText._id]);
+     setTexts(prevTexts => [...prevTexts, newText]);
+
+     console.log("Database IDs:", databaseIds);
+     console.log("Texts:", texts);
+
     } catch (error) {
       console.error("Error al crear el texto: ", error);
     }
-  }
+  };
 
   return (
     <div>
-      <h3>Selecciona un ID:</h3>
+      <h3>Selecciona un ID de reunión:</h3>
 
       <Button
         appearance="primary"
         onClick={handleNewDocument}
         style={{ marginBottom: "16px" }}
       >
-        Crear nuevo documento
+        Crear nueva reunión
       </Button>
 
       {databaseIds.map((id) => (
