@@ -64,15 +64,16 @@ const TemaDetails = ({ tema, selectedText }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            contenido: "Introduction to the new topic 230404",
-            tipo: "paragraph",
+            contenido: "Texto por defecto",
+            tipo: "Duda",
             alineacion: "left",
             bold: false,
             italic: true,
             underline: false,
             autor: "Pipet",
-            sentimiento: "positive",
+            sentimiento: "positivo",
             orden: 1,
+            date: new Date(),
           }),
         }
       );
@@ -119,7 +120,6 @@ const TemaDetails = ({ tema, selectedText }) => {
       }
 
       console.log("Tema eliminado");
-      // Después de eliminar el tema, establece elementos en un array vacío
       setElementos([]);
     } catch (error) {
       console.error("Error al eliminar el tema:", error.message);
@@ -141,13 +141,7 @@ const TemaDetails = ({ tema, selectedText }) => {
         }
 
         const data = await response.json();
-        //console.log("Datos recibidos:", data);
-
-        // Verifica si 'tema' está presente en la respuesta
         if (data.tema && data.tema.elementos) {
-          // Depuración: Verifica la longitud de los elementos
-          //console.log("Longitud de elementos:", data.tema.elementos.length);
-
           setElementos(data.tema.elementos);
         } else {
           console.error(
@@ -159,13 +153,10 @@ const TemaDetails = ({ tema, selectedText }) => {
       }
     };
 
-    // Establece el intervalo de llamada a fetchData
-    const intervalId = setInterval(fetchData, 1000); // Llama a fetchData cada minuto
-
-    // Limpieza del intervalo cuando el componente se desmonta
+    const intervalId = setInterval(fetchData, 1000);
     return () => clearInterval(intervalId);
-  }, []); // El segundo argumento [] asegura que useEffect solo se ejecute una vez al montar el componente
-
+  }, []); 
+  
   return (
     <div className="tema-details-container">
       <div className="tema-container row">

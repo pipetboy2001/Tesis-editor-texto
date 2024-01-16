@@ -40,9 +40,8 @@ const VistaBonita = ({ selectedText }) => {
   };
 
   const renderGroupedParagraphs = () => {
-
     const orderedTypes = ["compromiso", "acuerdo", "duda", "desacuerdo"];
-    
+
     return orderedTypes.map((tipo) => (
       <div key={tipo} className="grouped-paragraphs">
         <div className="Titulo-tipo">
@@ -53,16 +52,11 @@ const VistaBonita = ({ selectedText }) => {
             style={{ width: "20px", height: "20px" }} // Ajusta el tamaño del ícono
           />
         </div>
-        
       </div>
     ));
   };
 
-  return (
-    <div className="vista-bonita">
-      {renderGroupedParagraphs()}
-    </div>
-  );
+  return <div className="vista-bonita">{renderGroupedParagraphs()}</div>;
 };
 
 export default VistaBonita;

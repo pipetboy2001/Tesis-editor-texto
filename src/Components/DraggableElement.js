@@ -124,7 +124,7 @@ const DraggableElement = ({
             <strong>
               <DateIcon size="small" /> Fecha:
             </strong>{" "}
-            {elemento.fecha}
+            {elemento.date}
           </p>
         </div>
       </div>

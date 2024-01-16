@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Card from "react-bootstrap/Card";
 import { Button, Modal, Form } from "react-bootstrap";
 import AddCircleIcon from "@atlaskit/icon/glyph/add";
 import TemaDetails from "./TemaDetails";
@@ -27,7 +26,6 @@ const EditorView = ({ selectedText }) => {
       setState((prevState) => ({ ...prevState, temas: data.temas }));
     } catch (error) {
       console.error("Error al obtener temas: ", error);
-      // Mostrar mensaje al usuario, por ejemplo, setear un estado de error
     } finally {
       setState((prevState) => ({ ...prevState, loading: false }));
     }
@@ -71,28 +69,32 @@ const EditorView = ({ selectedText }) => {
 
   const handleAddTema = async () => {
     try {
-      const response = await fetch(`${API_URL}/create-tema/${selectedText._id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tema: newTema.tema,
-          elementos: [
-            {
-              contenido: newTema.contenido,
-              tipo: "compromiso",
-              alineacion: "left",
-              bold: false,
-              italic: false,
-              underline: false,
-              autor: newTema.autor,
-              sentimiento: "positive",
-              orden: 1,
-            },
-          ],
-        }),
-      });
+      const response = await fetch(
+        `${API_URL}/create-tema/${selectedText._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            tema: newTema.tema,
+            elementos: [
+              {
+                contenido: newTema.contenido,
+                tipo: "compromiso",
+                alineacion: "left",
+                bold: false,
+                italic: false,
+                underline: false,
+                autor: newTema.autor,
+                sentimiento: "positive",
+                orden: 1,
+                date: new Date(),
+              },
+            ],
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Error al añadir tema: ${response.statusText}`);
@@ -109,17 +111,23 @@ const EditorView = ({ selectedText }) => {
     <>
       <div className="sticky-header-container">
         <div className="EditorTexto">
-          {loading ? (
-            "Cargando temas..."
-          ) : temas.length > 0 ? (
-            temas.map((tema) => (
-              <TemaDetails key={tema.id_tema} tema={tema} selectedText={selectedText} />
-            ))
-          ) : (
-            "No hay temas disponibles"
-          )}
+          {loading
+            ? "Cargando temas..."
+            : temas.length > 0
+            ? temas.map((tema) => (
+                <TemaDetails
+                  key={tema.id_tema}
+                  tema={tema}
+                  selectedText={selectedText}
+                />
+              ))
+            : "No hay temas disponibles"}
         </div>
-        <Button variant="outline-primary" className="add-tema-button" onClick={handleShowModal}>
+        <Button
+          variant="outline-primary"
+          className="add-tema-button"
+          onClick={handleShowModal}
+        >
           <AddCircleIcon size="small" />
           Añadir Tema
         </Button>
