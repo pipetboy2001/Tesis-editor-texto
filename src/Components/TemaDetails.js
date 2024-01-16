@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import TrashIcon from "@atlaskit/icon/glyph/trash";
 import AddCircleIcon from "@atlaskit/icon/glyph/add";
 import DraggableElement from "./DraggableElement";
+import "./../Styles/TemaDetails.css";
 
 const BASE_URL = "http://localhost:8000";
 
