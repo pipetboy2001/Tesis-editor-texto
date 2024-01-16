@@ -1,141 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { useDrag, useDrop } from "react-dnd";
-import CommentIcon from "@atlaskit/icon/glyph/comment";
-import MentionIcon from "@atlaskit/icon/glyph/mention";
-import SentimientoIcon from "@atlaskit/icon/glyph/emoji";
-import DateIcon from "@atlaskit/icon/glyph/calendar";
-import EditIcon from "@atlaskit/icon/glyph/edit";
 import TrashIcon from "@atlaskit/icon/glyph/trash";
 import AddCircleIcon from "@atlaskit/icon/glyph/add";
-import EditModal from "./EditModal";
+import DraggableElement from "./DraggableElement";
 
-const DraggableElement = ({
-  elemento,
-  index,
-  moveElement,
-  onDeleteElement,
-  idTema,
-  idText,
-}) => {
-  const [{ isDragging }, ref] = useDrag({
-    type: "ELEMENTO",
-    item: { index },
-  });
-
-  const [, drop] = useDrop({
-    accept: "ELEMENTO",
-    hover: (draggedItem) => {
-      if (draggedItem.index !== index) {
-        moveElement(draggedItem.index, index);
-        draggedItem.index = index;
-      }
-    },
-  });
-
-  const containerClass = `elemento-container ${
-    isDragging ? "elemento-container-dragging" : ""
-  }`;
-
-  const [showEditModal, setShowEditModal] = useState(false);
-
-  const handleEditClick = () => setShowEditModal(true);
-  const handleCloseEditModal = () => setShowEditModal(false);
-  const handleDeleteClick = () => onDeleteElement(idText, idTema, elemento._id);
-
-  const handleSaveElemento = async (editedElemento) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8000/text/temas/${idText}/${idTema}/${editedElemento._id}`,
-        {
-          method: "PUT", // Cambia a método PUT para actualizar el elemento
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editedElemento),
-        }
-      );
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          `Error al editar el elemento: ${response.statusText}. Detalles: ${errorData.message}`
-        );
-      }
-  
-      const updatedElemento = await response.json();
-      handleCloseEditModal();
-    } catch (error) {
-      console.error("Error al editar el elemento:", error.message);
-    }
-  };
-
-  return (
-    <div ref={(node) => ref(drop(node))} className={containerClass}>
-      <div className="row">
-        <div className="col-md-6 col-sm-12">
-          <Button
-            variant="primary"
-            className="edit-button"
-            onClick={handleEditClick}
-          >
-            <EditIcon size="small" /> Editar
-          </Button>
-          <EditModal
-            show={showEditModal}
-            handleClose={handleCloseEditModal}
-            elemento={elemento}
-            onSave={(editedElemento) => handleSaveElemento(editedElemento)}
-          />
-        </div>
-        <div className="col-md-6 col-sm-12">
-          <Button
-            variant="danger"
-            className="delete-button"
-            onClick={handleDeleteClick}
-          >
-            <TrashIcon size="small" /> Eliminar
-          </Button>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-md-6 col-sm-12">
-          <p>
-            <strong>
-              <MentionIcon size="small" /> Autor{" "}
-            </strong>{" "}
-            {elemento.autor}
-          </p>
-          <p>
-            <strong>
-              <CommentIcon size="small" /> Tipo:
-            </strong>{" "}
-            {elemento.tipo}
-          </p>
-        </div>
-        <div className="col-md-6 col-sm-12">
-          <p>
-            <strong>
-              <SentimientoIcon size="small" /> Sentimiento:
-            </strong>{" "}
-            {elemento.sentimiento}
-          </p>
-          <p>
-            <strong>
-              <DateIcon size="small" /> Fecha:
-            </strong>{" "}
-            {elemento.fecha}
-          </p>
-        </div>
-      </div>
-      <div className="row contenido-section">
-        <div className="col-md-12">
-          <p>{elemento.contenido}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
+const BASE_URL = "http://localhost:8000";
 
 const TemaDetails = ({ tema, selectedText }) => {
   const [elementos, setElementos] = useState(tema.elementos || []);
@@ -158,19 +27,15 @@ const TemaDetails = ({ tema, selectedText }) => {
     setElementos(updatedElementos);
   };
 
-  // console.log de text, tema y elementos
-  //console.log("id documento", selectedText._id);
-  //console.log("id tema", tema._id);
-
   const idText = selectedText._id;
   const idTema = tema._id;
 
-  const handleDeleteElement = async (idText, idTema, elementId) => {
-    console.log("se eleminara el elemento", elementId);
+  const handleDeleteElement = async (elementId) => {
+    console.log("se eliminará el elemento", elementId);
 
     try {
       const response = await fetch(
-        `http://localhost:8000/text/temas/${idText}/${idTema}/${elementId}`,
+        `${BASE_URL}/text/temas/${idText}/${idTema}/${elementId}`,
         {
           method: "DELETE",
         }
@@ -182,16 +47,17 @@ const TemaDetails = ({ tema, selectedText }) => {
           `Error al eliminar el elemento: ${response.statusText}. Detalles: ${errorData.message}`
         );
       }
+
       updateElementosAfterDelete(elementId);
     } catch (error) {
       console.error("Error al eliminar el elemento:", error.message);
     }
   };
 
-  const handleAddElement = async (idText, idTema) => {
+  const handleAddElement = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/text/temas/${idText}/${idTema}`,
+        `${BASE_URL}/text/temas/${idText}/${idTema}`,
         {
           method: "POST",
           headers: {
@@ -223,7 +89,6 @@ const TemaDetails = ({ tema, selectedText }) => {
       setElementos(updatedElementos);
 
       console.log("Elemento agregado", addedElemento);
-      //actualizar vista
       updatedElementosAfeterEdit(addedElemento);
     } catch (error) {
       console.error("Error al agregar el elemento:", error.message);
@@ -239,9 +104,12 @@ const TemaDetails = ({ tema, selectedText }) => {
 
   const handleDeleteTema = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/text/temas/${idText}/${idTema}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${BASE_URL}/text/temas/${idText}/${idTema}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -250,12 +118,53 @@ const TemaDetails = ({ tema, selectedText }) => {
         );
       }
 
-      // Actualizar la vista o redirigir después de eliminar el tema
       console.log("Tema eliminado");
+      // Después de eliminar el tema, establece elementos en un array vacío
+      setElementos([]);
     } catch (error) {
       console.error("Error al eliminar el tema:", error.message);
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const endpoint = `${BASE_URL}/text/temas/${idText}/${idTema}`;
+
+      try {
+        const response = await fetch(endpoint);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            `Error al obtener datos: ${response.statusText}. Detalles: ${errorData.message}`
+          );
+        }
+
+        const data = await response.json();
+        //console.log("Datos recibidos:", data);
+
+        // Verifica si 'tema' está presente en la respuesta
+        if (data.tema && data.tema.elementos) {
+          // Depuración: Verifica la longitud de los elementos
+          //console.log("Longitud de elementos:", data.tema.elementos.length);
+
+          setElementos(data.tema.elementos);
+        } else {
+          console.error(
+            "La propiedad 'tema' o 'elementos' es undefined en la respuesta del servidor."
+          );
+        }
+      } catch (error) {
+        console.error("Error al obtener datos:", error.message);
+      }
+    };
+
+    // Establece el intervalo de llamada a fetchData
+    const intervalId = setInterval(fetchData, 1000); // Llama a fetchData cada minuto
+
+    // Limpieza del intervalo cuando el componente se desmonta
+    return () => clearInterval(intervalId);
+  }, []); // El segundo argumento [] asegura que useEffect solo se ejecute una vez al montar el componente
 
   return (
     <div className="tema-details-container">
@@ -292,9 +201,9 @@ const TemaDetails = ({ tema, selectedText }) => {
                 elemento={elemento}
                 index={index}
                 moveElement={moveElement}
-                onDeleteElement={handleDeleteElement}
-                idTema={tema._id} // Pasar idTema como prop
-                idText={selectedText._id} // Pasar idText como prop
+                onDeleteElement={() => handleDeleteElement(elemento._id)} // Modifica aquí
+                idTema={tema._id}
+                idText={selectedText._id}
               />
             ))}
           </div>
