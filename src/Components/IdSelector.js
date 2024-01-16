@@ -1,87 +1,78 @@
-// IdSelector.js
 import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "@atlaskit/button";
 
+const API_URL = "http://localhost:8000/text";
+
 const IdSelector = ({ onIdSelect }) => {
   const [databaseIds, setDatabaseIds] = useState([]);
-  const [databaseError, setDatabaseError] = useState(false);
   const [texts, setTexts] = useState([]);
+  const [databaseError, setDatabaseError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [newDocumentId, setNewDocumentId] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        setDatabaseError(true);
+        throw new Error(`Error al obtener textos: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setTexts(data.texts);
+      setDatabaseIds(data.texts.map((text) => text._id));
+    } catch (error) {
+      console.error("Error al obtener textos: ", error);
+      setDatabaseError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/text");
-        if (!response.ok) {
-          throw new Error(`Error al obtener textos: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        const ids = data.texts.map((text) => text._id);
-        setDatabaseIds(ids);
-      } catch (error) {
-        console.error("Error al obtener textos: ", error);
-      }
-    };
-
     fetchData();
-  }, []);
+
+    // Establece un intervalo para volver a cargar los datos cada cierto tiempo
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 30000); // Cada 30 segundos
+
+    // Limpieza del intervalo al desmontar el componente
+    return () => clearInterval(intervalId);
+  }, [newDocumentId]);
 
   const handleIdSelect = (id) => {
     onIdSelect(id);
-    
   };
+
   const handleDelete = async (id, event) => {
     try {
-      // Evita que el clic en el botón se propague al contenedor de la tarjeta
       event.stopPropagation();
-  
-      const response = await fetch(`http://localhost:8000/text/delete/${id}`, {
+
+      const response = await fetch(`${API_URL}/delete/${id}`, {
         method: 'DELETE',
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error al eliminar texto: ${response.statusText}`);
       }
-  
-      // Actualiza el estado después de la eliminación
-      setDatabaseIds(databaseIds.filter(existingId => existingId !== id));
-      setTexts(texts.filter(text => text._id !== id));
-  
+
+      setDatabaseIds((existingIds) => existingIds.filter((existingId) => existingId !== id));
+      setTexts((existingTexts) => existingTexts.filter((text) => text._id !== id));
+
       console.log("ID eliminado: ", id);
     } catch (error) {
       console.error("Error al eliminar texto: ", error);
       // Manejar el error, si es necesario
     }
   };
-  
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/text");
-        if (!response.ok) {
-          setDatabaseError(true);
-          throw new Error(`Error al obtener textos: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        setTexts(data.texts);
-
-        // Resto del código...
-      } catch (error) {
-        console.error("Error al obtener textos: ", error);
-        setDatabaseError(true);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const handleNewDocument = async () => {
     try {
       const newDocumentData = {
         temas: [
+          // Contenido del nuevo documento
           {
             tema: "1",
             elementos: [
@@ -101,7 +92,7 @@ const IdSelector = ({ onIdSelect }) => {
         ],
       };
 
-      const response = await fetch("http://localhost:8000/text/create", {
+      const response = await fetch(`${API_URL}/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -114,13 +105,10 @@ const IdSelector = ({ onIdSelect }) => {
       }
 
       const createdDocument = await response.json();
-      // Puedes hacer algo con el documento creado si es necesario
 
-      // Refresca la lista de IDs después de crear el documento
-      const newDatabaseIds = [...databaseIds, createdDocument._id];
-      setDatabaseIds(newDatabaseIds);
-      // Recarga la página para reflejar los cambios
-    window.location.reload();
+      // Establece el nuevo ID para desencadenar la recarga automática
+      setNewDocumentId(createdDocument._id);
+
     } catch (error) {
       console.error("Error al crear el documento: ", error);
       // Manejar el error, si es necesario
@@ -139,27 +127,31 @@ const IdSelector = ({ onIdSelect }) => {
         Crear nueva reunión
       </Button>
 
-      {databaseIds.map((id) => (
-        <Card
-          key={id}
-          style={{ marginBottom: "16px", cursor: "pointer" }}
-          onClick={() => handleIdSelect(id)}
-        >
-          <Card.Body>
-            <Card.Text>ID: {id}</Card.Text>
-            <Button appearance="primary" onClick={() => onIdSelect(id)}>
-              ¡Haz clic aquí para seleccionar!
-            </Button>
+      {loading ? (
+        <p>Cargando...</p>
+      ) : (
+        databaseIds.map((id) => (
+          <Card
+            key={id}
+            style={{ marginBottom: "16px", cursor: "pointer" }}
+            onClick={() => handleIdSelect(id)}
+          >
+            <Card.Body>
+              <Card.Text>ID: {id}</Card.Text>
+              <Button appearance="primary" onClick={() => handleIdSelect(id)}>
+                ¡Haz clic aquí para seleccionar!
+              </Button>
 
-            <Button
-              appearance="danger"
-              onClick={(event) => handleDelete(id, event)}
-            >
-              Eliminar
-            </Button>
-          </Card.Body>
-        </Card>
-      ))}
+              <Button
+                appearance="danger"
+                onClick={(event) => handleDelete(id, event)}
+              >
+                Eliminar
+              </Button>
+            </Card.Body>
+          </Card>
+        ))
+      )}
     </div>
   );
 };
