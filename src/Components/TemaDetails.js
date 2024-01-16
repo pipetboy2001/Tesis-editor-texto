@@ -237,6 +237,26 @@ const TemaDetails = ({ tema, selectedText }) => {
     setElementos(updatedElementos);
   };
 
+  const handleDeleteTema = async () => {
+    try {
+      const response = await fetch(`http://localhost:8000/text/temas/${idText}/${idTema}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          `Error al eliminar el tema: ${response.statusText}. Detalles: ${errorData.message}`
+        );
+      }
+
+      // Actualizar la vista o redirigir después de eliminar el tema
+      console.log("Tema eliminado");
+    } catch (error) {
+      console.error("Error al eliminar el tema:", error.message);
+    }
+  };
+
   return (
     <div className="tema-details-container">
       <div className="tema-container row">
@@ -253,6 +273,13 @@ const TemaDetails = ({ tema, selectedText }) => {
           >
             <AddCircleIcon size="small" />
             Añadir Elemento
+          </Button>
+          <Button
+            variant="danger"
+            className="delete-button"
+            onClick={handleDeleteTema}
+          >
+            <TrashIcon size="small" /> Borrar Tema
           </Button>
         </div>
       </div>
