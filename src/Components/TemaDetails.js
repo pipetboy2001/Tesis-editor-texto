@@ -43,6 +43,33 @@ const DraggableElement = ({
   const handleCloseEditModal = () => setShowEditModal(false);
   const handleDeleteClick = () => onDeleteElement(idText, idTema, elemento._id);
 
+  const handleSaveElemento = async (editedElemento) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/text/temas/${idText}/${idTema}/${editedElemento._id}`,
+        {
+          method: "PUT", // Cambia a método PUT para actualizar el elemento
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editedElemento),
+        }
+      );
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          `Error al editar el elemento: ${response.statusText}. Detalles: ${errorData.message}`
+        );
+      }
+  
+      const updatedElemento = await response.json();
+      handleCloseEditModal();
+    } catch (error) {
+      console.error("Error al editar el elemento:", error.message);
+    }
+  };
+
   return (
     <div ref={(node) => ref(drop(node))} className={containerClass}>
       <div className="row">
@@ -58,7 +85,7 @@ const DraggableElement = ({
             show={showEditModal}
             handleClose={handleCloseEditModal}
             elemento={elemento}
-            onSave={(editedElemento) => console.log(editedElemento)}
+            onSave={(editedElemento) => handleSaveElemento(editedElemento)}
           />
         </div>
         <div className="col-md-6 col-sm-12">
@@ -113,7 +140,6 @@ const DraggableElement = ({
 const TemaDetails = ({ tema, selectedText }) => {
   const [elementos, setElementos] = useState(tema.elementos || []);
   const [showEditModal, setShowEditModal] = useState(false);
-  
 
   const updateElementosAfterDelete = (deletedElementId) => {
     const updatedElementos = elementos.filter(
@@ -131,7 +157,6 @@ const TemaDetails = ({ tema, selectedText }) => {
     });
     setElementos(updatedElementos);
   };
-
 
   // console.log de text, tema y elementos
   //console.log("id documento", selectedText._id);
@@ -200,8 +225,6 @@ const TemaDetails = ({ tema, selectedText }) => {
       console.log("Elemento agregado", addedElemento);
       //actualizar vista
       updatedElementosAfeterEdit(addedElemento);
-
-
     } catch (error) {
       console.error("Error al agregar el elemento:", error.message);
     }

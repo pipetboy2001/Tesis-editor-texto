@@ -51,7 +51,7 @@ const EditModal = ({ show, handleClose, elemento, onSave }) => {
         <Button variant="secondary" onClick={handleClose}>
           Cerrar
         </Button>
-        <Button variant="primary" onClick={handleSave}>
+        <Button variant="primary" onClick={() => onSave(editedElemento)}>
           Guardar Cambios
         </Button>
       </Modal.Footer>
