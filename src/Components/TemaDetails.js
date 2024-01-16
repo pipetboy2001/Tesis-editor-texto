@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import "./../Styles/TemaDetails.css";
 import { Button } from "react-bootstrap";
-import "./../Styles/ElementoDetails.css";
 import { useDrag, useDrop } from "react-dnd";
 import CommentIcon from "@atlaskit/icon/glyph/comment";
 import MentionIcon from "@atlaskit/icon/glyph/mention";
@@ -10,6 +8,7 @@ import DateIcon from "@atlaskit/icon/glyph/calendar";
 import EditIcon from "@atlaskit/icon/glyph/edit";
 import TrashIcon from "@atlaskit/icon/glyph/trash";
 import AddCircleIcon from "@atlaskit/icon/glyph/add";
+import EditModal from "./EditModal";
 
 const DraggableElement = ({ elemento, index, moveElement }) => {
   const [{ isDragging }, ref] = useDrag({
@@ -27,19 +26,26 @@ const DraggableElement = ({ elemento, index, moveElement }) => {
     },
   });
 
-  const containerClass = `elemento-container ${
-    isDragging ? "elemento-container-dragging" : ""
-  }`;
+  const containerClass = `elemento-container ${isDragging ? "elemento-container-dragging" : ""}`;
+
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  const handleEditClick = () => setShowEditModal(true);
+  const handleCloseEditModal = () => setShowEditModal(false);
 
   return (
     <div ref={(node) => ref(drop(node))} className={containerClass}>
-      {/* Resto del código del componente ElementoDetails */}
       <div className="row">
         <div className="col-md-6 col-sm-12">
-          <Button variant="primary" className="edit-button">
-            <EditIcon size="small" />
-            Editar
+          <Button variant="primary" className="edit-button" onClick={handleEditClick}>
+            <EditIcon size="small"/> Editar
           </Button>
+          <EditModal
+            show={showEditModal}
+            handleClose={handleCloseEditModal}
+            elemento={elemento}
+            onSave={(editedElemento) => console.log(editedElemento)}
+          />
         </div>
         <div className="col-md-6 col-sm-12">
           <Button variant="danger" className="delete-button">
@@ -50,33 +56,12 @@ const DraggableElement = ({ elemento, index, moveElement }) => {
       </div>
       <div className="row">
         <div className="col-md-6 col-sm-12">
-          <p>
-            <strong>
-              <MentionIcon size="small" /> Autor{" "}
-            </strong>{" "}
-            {elemento.autor}
-          </p>
-          <p>
-            <strong>
-              <CommentIcon size="small" /> Tipo:
-            </strong>{" "}
-            {elemento.tipo}
-          </p>
+          <p><strong><MentionIcon size="small" /> Autor </strong> {elemento.autor}</p>
+          <p><strong><CommentIcon size="small" /> Tipo:</strong> {elemento.tipo}</p>
         </div>
         <div className="col-md-6 col-sm-12">
-          <p>
-            <strong>
-              <SentimientoIcon size="small" />
-              Sentimiento:
-            </strong>{" "}
-            {elemento.sentimiento}
-          </p>
-          <p>
-            <strong>
-              <DateIcon size="small" /> Fecha:
-            </strong>{" "}
-            {elemento.fecha}
-          </p>
+          <p><strong><SentimientoIcon size="small" /> Sentimiento:</strong> {elemento.sentimiento}</p>
+          <p><strong><DateIcon size="small" /> Fecha:</strong> {elemento.fecha}</p>
         </div>
       </div>
       <div className="row contenido-section">
@@ -90,6 +75,7 @@ const DraggableElement = ({ elemento, index, moveElement }) => {
 
 const TemaDetails = ({ tema }) => {
   const [elementos, setElementos] = useState(tema.elementos || []);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const moveElement = (fromIndex, toIndex) => {
     const updatedElementos = [...elementos];
@@ -102,9 +88,7 @@ const TemaDetails = ({ tema }) => {
     <div className="tema-details-container">
       <div className="tema-container row">
         <div className="col-md-6">
-          <h3>
-            Tema {tema.id_tema}: {tema.tema}
-          </h3>
+          <h3>Tema {tema.id_tema}: {tema.tema}</h3>
         </div>
         <div className="col-md-6">
           <Button variant="outline-primary" className="edit-button">
