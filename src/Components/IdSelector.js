@@ -11,7 +11,6 @@ const IdSelector = ({ onIdSelect }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        //const response = await fetch("http://172.111.10.181:8000/text");
         const response = await fetch("http://localhost:8000/text");
         if (!response.ok) {
           throw new Error(`Error al obtener textos: ${response.statusText}`);
@@ -60,7 +59,6 @@ const IdSelector = ({ onIdSelect }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        //const response = await fetch("http://172.111.10.181:8000/text");
         const response = await fetch("http://localhost:8000/text");
         if (!response.ok) {
           setDatabaseError(true);
@@ -82,56 +80,50 @@ const IdSelector = ({ onIdSelect }) => {
 
   const handleNewDocument = async () => {
     try {
-      // Create a new text document
-      const response = await fetch("http://localhost:8000/text/create", {
-        method: "POST",
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error al crear el texto: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      const newText = data.text;
-
-      
-
-      // Create a default theme with elements
-      const defaultTheme = {
-        tema: "Introduction",
-        id_tema: "123",
-        elementos: [
+      const newDocumentData = {
+        temas: [
           {
-            contenido: "Introduction to the topic",
-            alineacion: "left",
-            bold: false,
-            italic: true,
-            underline: false,
-            tipo: "paragraph",
-            autor: "Jane Doe",
-            sentimiento: "positive",
-            orden: 2,
+            tema: "1",
+            elementos: [
+              {
+                contenido: "Primer elemento del tema 1",
+                alineacion: "left",
+                bold: false,
+                italic: false,
+                underline: false,
+                tipo: "paragraph",
+                autor: "Pipet",
+                sentimiento: "positive",
+                orden: 1,
+              },
+            ],
           },
         ],
       };
 
-      // Set temas for the new document
-      newText.temas = [defaultTheme];
+      const response = await fetch("http://localhost:8000/text/create", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newDocumentData),
+      });
 
-      // Set the id_reunion for the new document
-      newText.id_reunion = "1"; // Replace with the actual id_reunion value
+      if (!response.ok) {
+        throw new Error(`Error al crear el documento: ${response.statusText}`);
+      }
 
-      
+      const createdDocument = await response.json();
+      // Puedes hacer algo con el documento creado si es necesario
 
-     // Update the state and log the updated state immediately
-     setDatabaseIds(prevIds => [...prevIds, newText._id]);
-     setTexts(prevTexts => [...prevTexts, newText]);
-
-     console.log("Database IDs:", databaseIds);
-     console.log("Texts:", texts);
-
+      // Refresca la lista de IDs después de crear el documento
+      const newDatabaseIds = [...databaseIds, createdDocument._id];
+      setDatabaseIds(newDatabaseIds);
+      // Recarga la página para reflejar los cambios
+    window.location.reload();
     } catch (error) {
-      console.error("Error al crear el texto: ", error);
+      console.error("Error al crear el documento: ", error);
+      // Manejar el error, si es necesario
     }
   };
 
