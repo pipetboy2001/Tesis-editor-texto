@@ -73,7 +73,7 @@ const TemaDetails = ({ tema, selectedText }) => {
             underline: false,
             autor: "Pipet",
             sentimiento: "positivo",
-            orden: 1,
+            orden: elementos.length + 1,
             date: new Date(),
           }),
         }
@@ -162,7 +162,7 @@ const TemaDetails = ({ tema, selectedText }) => {
     <div className="tema-details-container">
       <div className="tema-container row">
         <div className="col-md-6">
-          <h3>
+          <h3 style={{ color: "#0052CC" }}>
             Tema {tema.id_tema} {tema.tema}
           </h3>
         </div>
@@ -171,6 +171,7 @@ const TemaDetails = ({ tema, selectedText }) => {
             variant="outline-primary"
             className="edit-button"
             onClick={() => handleAddElement(idText, idTema)}
+            style={{ backgroundColor: "#0052CC", borderColor: "#0052CC" }}
           >
             <AddCircleIcon size="small" />
             Añadir Elemento
@@ -179,6 +180,7 @@ const TemaDetails = ({ tema, selectedText }) => {
             variant="danger"
             className="delete-button"
             onClick={handleDeleteTema}
+            style={{ backgroundColor: "#ff5630", borderColor: "#ff5630" }}
           >
             <TrashIcon size="small" /> Borrar Tema
           </Button>
@@ -193,7 +195,7 @@ const TemaDetails = ({ tema, selectedText }) => {
                 elemento={elemento}
                 index={index}
                 moveElement={moveElement}
-                onDeleteElement={() => handleDeleteElement(elemento._id)} // Modifica aquí
+                onDeleteElement={() => handleDeleteElement(elemento._id)}
                 idTema={tema._id}
                 idText={selectedText._id}
               />

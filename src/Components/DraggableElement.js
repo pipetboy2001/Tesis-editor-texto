@@ -9,6 +9,7 @@ import EditIcon from "@atlaskit/icon/glyph/edit";
 import TrashIcon from "@atlaskit/icon/glyph/trash";
 import AddCircleIcon from "@atlaskit/icon/glyph/add";
 import EditModal from "./EditModal";
+import "./../Styles/DraggableElement.css";
 
 const DraggableElement = ({
   elemento,

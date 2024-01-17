@@ -1,0 +1,30 @@
+/* Agrega estos estilos a tu archivo de estilos CSS correspondiente */
+
+.sticky-header-container {
+    position: relative;
+    padding-bottom: 70px; /* Ajusta según la altura de tu footer */
+  }
+  
+  .add-tema-button.sticky-footer {
+    position: fixed;
+    bottom: 15px; /* Ajusta según la distancia desde la parte inferior */
+    right: 15px; /* Ajusta según la distancia desde la derecha */
+  }
+/* Añade estos estilos al modal */
+.modal {
+    z-index: 1050; /* Ajusta según sea necesario para evitar superposiciones con el botón */
+  }
+    
+  .custom-button-style {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    border: 1px solid #0052CC;
+    background-color: #0052CC;
+    color: #ffffff;
+    padding: 10px 20px;
+    cursor: pointer;
+    
+
+
+  }
+  

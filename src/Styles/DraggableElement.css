@@ -1,21 +1,56 @@
+/* DraggableElement.css */
+
 .elemento-container {
-    border: 1px solid #ddd; /* Agrega un borde para separar visualmente los elementos */
-    border-radius: 5px; /* Agrega esquinas redondeadas */
-    padding: 10px; /* Añade algún espaciado para mayor claridad */
-    /* background-color: #226e93; Color celeste */
-    background-color: #ADD8E6;
-    color: #333; /* Letras blancas */
-}
-
-/* Estilo para el sector del contenido */
-.elemento-container .contenido-section {
-    background-color: #fff; /* Fondo blanco */
-    color: #333; /* Letras negras */
-    padding: 10px; /* Añade espaciado para mayor claridad */
-}
-
-
-.elemento-container-dragging {
-    border: 2px dashed #aaa; /* Un borde punteado o algún estilo visual para indicar que está siendo arrastrado */
+    border: 1px solid #0052CC;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+    padding: 15px; /* Aumenta el espacio interno */
+  }
+  
+  .elemento-container-dragging {
+    opacity: 0.5; /* Opacidad durante el arrastre */
+  }
+  
+  .edit-button,
+  .delete-button {
+    margin-top: 10px;
+  }
+  
+  /* Estilos para los botones de acción */
+  .edit-button {
+    color: #FFFFFF;
+    background-color: #0052CC;
+    border-color: #0052CC;
+  }
+  
+  .delete-button {
+    color: #FFFFFF;
+    background-color: #ff5630;
+    border-color: #ff5630;
+  }
+  
+  .row {
+    margin-bottom: 10px;
+  }
+  
+  /* Estilos para las secciones de información */
+  .col-md-6,
+  .col-sm-12 {
+    margin-bottom: 5px;
+  }
+  
+  /* Estilos para el contenido */
+  .contenido-section {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
+  /* Ajuste para el texto en el contenido */
+  .contenido-section p {
+    margin-bottom: 0;
   }
   

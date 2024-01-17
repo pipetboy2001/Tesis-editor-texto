@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import AddCircleIcon from "@atlaskit/icon/glyph/add";
 import TemaDetails from "./TemaDetails";
-
+import "./../Styles/EditorView.css";
 const API_URL = "http://localhost:8000/text";
 
 const EditorView = ({ selectedText }) => {
@@ -124,13 +124,14 @@ const EditorView = ({ selectedText }) => {
             : "No hay temas disponibles"}
         </div>
         <Button
-          variant="outline-primary"
-          className="add-tema-button"
+          variant="primary"
+          className="add-tema-button sticky-footer custom-button-style"
           onClick={handleShowModal}
         >
           <AddCircleIcon size="small" />
           Añadir Tema
         </Button>
+
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
             <Modal.Title>Añadir Tema</Modal.Title>

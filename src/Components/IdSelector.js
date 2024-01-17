@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "@atlaskit/button";
+import './../Styles/IdSelector.css';
 
 const API_URL = "http://localhost:8000/text";
 
@@ -117,7 +118,7 @@ const IdSelector = ({ onIdSelect }) => {
   };
 
   return (
-    <div>
+    <div className="id-selector-container">
       <h3>Selecciona un ID de reunión:</h3>
 
       <Button

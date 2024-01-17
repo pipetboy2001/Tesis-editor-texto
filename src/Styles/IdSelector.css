@@ -1,0 +1,62 @@
+
+
+/* Estilos para el contenedor principal de IdSelector */
+.id-selector-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  /* Estilos para el encabezado dentro de IdSelector */
+  .id-selector-container h3 {
+    color: #0052CC; /* Color primario para el encabezado */
+  }
+  
+  /* Estilos para el contenedor de las tarjetas */
+  .id-selector-container .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px; /* Espaciado entre las tarjetas */
+  }
+  
+  /* Estilos para el botón "Crear nueva reunión" */
+  .id-selector-container Button {
+    color: #FFFFFF;
+    margin-bottom: 16px;
+  }
+  
+  /* Estilos para las tarjetas de reunión */
+  .id-selector-container Card {
+    flex: 0 0 calc(48% - 10px); /* Tamaño de la tarjeta y espaciado entre tarjetas */
+    cursor: pointer;
+    border: 1px solid #ddd; /* Borde ligero */
+    border-radius: 8px; /* Esquinas redondeadas */
+    transition: transform 0.3s; /* Efecto de transición suave al hacer hover */
+  }
+  
+  /* Estilos para el cuerpo de las tarjetas */
+  .id-selector-container Card.Body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+  }
+  
+  /* Estilos para el texto de las tarjetas */
+  .id-selector-container Card.Text {
+    color: #0052CC; /* Color primario para el texto de la tarjeta */
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  
+  
+  
+  /* Efecto de transición al hacer hover en la tarjeta */
+  .id-selector-container Card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
