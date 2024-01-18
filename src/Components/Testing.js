@@ -50,9 +50,9 @@ const Testing = ({ selectedId }) => {
           <EditorView selectedText={selectedText} />
         ) : (
           <VistaBonita
-            paragraphs={selectedText && selectedText.temas}
-            selectedText={selectedText}
             selectedId={selectedId}
+            selectedText={selectedText.temas}
+            
           />
         )}
       </div>
