@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import "./../Styles/VistaBonita.css";
 import CompromisoIcon from "./../Assets/png/i__Compromiso.png";
 import AcuerdoIcon from "./../Assets/png/i__Acuerdo.png";
@@ -7,79 +7,60 @@ import DesacuerdoIcon from "./../Assets/png/i__Desacuerdo.png";
 import ArrowDownIcon from "@atlaskit/icon/glyph/arrow-down";
 import PageIcon from "@atlaskit/icon/glyph/page";
 import jsPDF from "jspdf";
-
 const IconoPredeterminado = "./../Assets/png/i__Acuerdo.png";
-
-const VistaBonita = ({ selectedText }) => {
+const VistaBonita = ({ selectedText, selectedId }) => {
   const orderedTypes = ["Compromiso", "Acuerdo", "Duda", "Desacuerdo"];
+
+  /* // obtener el id del texto
+  const idTexto = selectedId;
+  // Obtener los IDs de los temas
+  const temasIds = selectedText.map((tema) => tema._id);
+  console.log("temasIds", temasIds);
+  // Obtener las cadenas formateadas con la estructura requerida
+  const temasUrls = selectedText.map(
+    (tema) => `http://localhost:8000/text/temas/${idTexto}/${tema._id}`
+  );
+  console.log("temasUrls", temasUrls);
+  // Obtener el id de cada elemento de un tema
+  const elementosIds = selectedText.map((tema) =>
+    tema.elementos.map((elemento) => elemento._id)
+  );
+  console.log("elementosIds", elementosIds);
+  // Obtener las cadenas formateadas con la estructura requerida
+  const elementosUrls = selectedText.map((tema) =>
+    tema.elementos.map(
+      (elemento) =>
+        `http://localhost:8000/text/temas/${idTexto}/${tema._id}/${elemento._id}`
+    )
+  );
+  console.log("elementosUrls", elementosUrls); */
 
   const getIconByTipo = (tipo) => {
     const iconMap = {
       compromiso: CompromisoIcon,
-      Acuerdo: AcuerdoIcon,
-      Duda: DudaIcon,
-      Desacuerdo: DesacuerdoIcon,
+      acuerdo: AcuerdoIcon,
+      duda: DudaIcon,
+      desacuerdo: DesacuerdoIcon,
     };
 
-    return iconMap[tipo] || IconoPredeterminado;
+    return iconMap[tipo.toLowerCase()] || IconoPredeterminado;
   };
 
-  // Utiliza useRef para crear la referencia mutable
   const contentRef = useRef(null);
 
   const renderGroupedParagraphs = () => {
-    let totalCompromiso = 0;
-    let totalDuda = 0;
-    let totalAcuerdo = 0;
-    let totalDesacuerdo = 0;
-    let totalPositivo = 0;
-    let totalNegativo = 0;
-    let totalNeutral = 0;
-
-    selectedText.forEach((tema) => {
-      tema.elementos.forEach((elemento) => {
-        switch (elemento.tipo) {
-          case "Compromiso":
-            totalCompromiso++;
-            break;
-          case "Duda":
-            totalDuda++;
-            break;
-          case "Acuerdo":
-            totalAcuerdo++;
-            break;
-          case "Desacuerdo":
-            totalDesacuerdo++;
-            break;
-          default:
-            break;
-        }
-
-        switch (elemento.sentimiento) {
-          case "positivo":
-            totalPositivo++;
-            break;
-          case "negativo":
-            totalNegativo++;
-            break;
-          case "neutral":
-            totalNeutral++;
-            break;
-          default:
-            break;
-        }
-      });
-    });
-
-    const porcentajePositivo =
-      (totalPositivo / (totalPositivo + totalNegativo + totalNeutral)) * 100;
-    const porcentajeNegativo =
-      (totalNegativo / (totalPositivo + totalNegativo + totalNeutral)) * 100;
-    const porcentajeNeutral =
-      (totalNeutral / (totalPositivo + totalNegativo + totalNeutral)) * 100;
+    const {
+      totalCompromiso,
+      totalDuda,
+      totalAcuerdo,
+      totalDesacuerdo,
+      porcentajePositivo,
+      porcentajeNegativo,
+      porcentajeNeutral,
+    } = calculateSummary(selectedText);
 
     return (
-      <div>
+      <>
         <div className="summary-section">
           <h2 className="text-center">
             <PageIcon />
@@ -87,19 +68,15 @@ const VistaBonita = ({ selectedText }) => {
           </h2>
           <div className="d-flex justify-content-around">
             <div>
-              <p className="mb-1">Compromisos: {totalCompromiso}</p>
-              <p className="mb-1">Dudas: {totalDuda}</p>
-              <p className="mb-1">Acuerdos: {totalAcuerdo}</p>
-              <p>Desacuerdos: {totalDesacuerdo}</p>
+              {renderSummaryItem("Compromisos", totalCompromiso)}
+              {renderSummaryItem("Dudas", totalDuda)}
+              {renderSummaryItem("Acuerdos", totalAcuerdo)}
+              {renderSummaryItem("Desacuerdos", totalDesacuerdo)}
             </div>
             <div>
-              <p className="mb-1">
-                Porcentaje Positivo: {porcentajePositivo.toFixed(2)}%
-              </p>
-              <p className="mb-1">
-                Porcentaje Negativo: {porcentajeNegativo.toFixed(2)}%
-              </p>
-              <p>Porcentaje Neutral: {porcentajeNeutral.toFixed(2)}%</p>
+              {renderSummaryItem("Porcentaje Positivo", porcentajePositivo)}
+              {renderSummaryItem("Porcentaje Negativo", porcentajeNegativo)}
+              {renderSummaryItem("Porcentaje Neutral", porcentajeNeutral)}
             </div>
           </div>
         </div>
@@ -112,7 +89,7 @@ const VistaBonita = ({ selectedText }) => {
           return (
             <div key={tipo} className="grouped-paragraphs">
               <div className="Titulo-tipo">
-                <h3>{tipo.charAt(0).toUpperCase() + tipo.slice(1)}</h3>
+                <h3>{capitalizeFirstLetter(tipo)}</h3>
                 <img
                   src={getIconByTipo(tipo)}
                   alt={tipo}
@@ -131,28 +108,31 @@ const VistaBonita = ({ selectedText }) => {
             </div>
           );
         })}
-      </div>
+      </>
     );
   };
 
-  const handleTest = () => {
-    console.log("Descargando PDF...");
+  const renderSummaryItem = (label, value) => (
+    <p className="mb-1">
+      {label}: {typeof value === "number" ? formatPercentage(value) : value}
+    </p>
+  );
 
-    // Inicializar contadores para el resumen
+  const formatPercentage = (percentage) => {
+    return `${Math.round(percentage * 100) / 100}`;
+  };
+
+  const calculateSummary = (selectedText) => {
     let totalCompromiso = 0;
     let totalDuda = 0;
     let totalAcuerdo = 0;
     let totalDesacuerdo = 0;
-
-    // Contadores para el porcentaje de sentimientos
     let totalPositivo = 0;
     let totalNegativo = 0;
     let totalNeutral = 0;
 
-    // Iterar sobre los temas y elementos
     selectedText.forEach((tema) => {
       tema.elementos.forEach((elemento) => {
-        // Contar tipos para el resumen
         switch (elemento.tipo) {
           case "Compromiso":
             totalCompromiso++;
@@ -169,7 +149,7 @@ const VistaBonita = ({ selectedText }) => {
           default:
             break;
         }
-        // Contar sentimientos para el porcentaje
+
         switch (elemento.sentimiento) {
           case "positivo":
             totalPositivo++;
@@ -186,18 +166,51 @@ const VistaBonita = ({ selectedText }) => {
       });
     });
 
-    // Calcular porcentaje de sentimientos
-    const porcentajePositivo =
-      (totalPositivo / (totalPositivo + totalNegativo + totalNeutral)) * 100;
-    const porcentajeNegativo =
-      (totalNegativo / (totalPositivo + totalNegativo + totalNeutral)) * 100;
-    const porcentajeNeutral =
-      (totalNeutral / (totalPositivo + totalNegativo + totalNeutral)) * 100;
+    const totalSentimientos = totalPositivo + totalNegativo + totalNeutral;
 
-    // Crear un objeto jsPDF
+    const porcentajePositivo =
+      Math.round((totalPositivo / totalSentimientos) * 10000) / 100;
+    const porcentajeNegativo =
+      Math.round((totalNegativo / totalSentimientos) * 10000) / 100;
+    const porcentajeNeutral =
+      Math.round((totalNeutral / totalSentimientos) * 10000) / 100;
+
+    return {
+      totalCompromiso,
+      totalDuda,
+      totalAcuerdo,
+      totalDesacuerdo,
+      totalPositivo,
+      totalNegativo,
+      totalNeutral,
+      porcentajePositivo,
+      porcentajeNegativo,
+      porcentajeNeutral,
+    };
+  };
+
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  const handlePdfDownload = () => {
+    console.log("Descargando PDF...");
+
+    const {
+      totalCompromiso,
+      totalDuda,
+      totalAcuerdo,
+      totalDesacuerdo,
+      porcentajePositivo,
+      porcentajeNegativo,
+      porcentajeNeutral,
+    } = calculateSummary(selectedText);
+
     const pdf = new jsPDF();
 
-    // Texto para agregar al documento PDF
+    pdf.setFont("helvetica");
+    pdf.setFontSize(12);
+
     const texto = `
       Valores Sentimientos
       Positivo: ${porcentajePositivo.toFixed(2)}%
@@ -211,10 +224,8 @@ const VistaBonita = ({ selectedText }) => {
       Desacuerdos: ${totalDesacuerdo}
     `;
 
-    // Agregar el texto al documento PDF
     pdf.text(texto, 10, 10);
 
-    // Descargar el PDF
     pdf.save("Resumen.pdf");
 
     console.log("PDF descargado ¿?");
@@ -222,13 +233,11 @@ const VistaBonita = ({ selectedText }) => {
 
   return (
     <div>
-      {/* Contenedor del contenido a descargar */}
       <div ref={contentRef} className="vista-bonita">
         {renderGroupedParagraphs()}
       </div>
 
-      {/* Botón para descargar el PDF */}
-      <div className="pdf-download-button" onClick={handleTest}>
+      <div className="pdf-download-button" onClick={handlePdfDownload}>
         <ArrowDownIcon />
         Descargar PDF
       </div>
