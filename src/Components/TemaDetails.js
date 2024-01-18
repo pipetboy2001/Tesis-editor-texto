@@ -8,7 +8,11 @@ import "./../Styles/TemaDetails.css";
 const BASE_URL = "http://localhost:8000";
 
 const TemaDetails = ({ tema, selectedText }) => {
-  const [elementos, setElementos] = useState(tema.elementos || []);
+  const [elementos, setElementos] = useState(
+    tema.elementos.sort((a, b) => a.orden - b.orden) || []
+  );
+  
+
   const [showEditModal, setShowEditModal] = useState(false);
 
   const updateElementosAfterDelete = (deletedElementId) => {
@@ -97,11 +101,48 @@ const TemaDetails = ({ tema, selectedText }) => {
     }
   };
 
-  const moveElement = (fromIndex, toIndex) => {
-    const updatedElementos = [...elementos];
-    const movedElement = updatedElementos.splice(fromIndex, 1)[0];
-    updatedElementos.splice(toIndex, 0, movedElement);
-    setElementos(updatedElementos);
+  const moveElement = async (fromIndex, toIndex) => {
+    try {
+      const updatedElementos = [...elementos];
+      const movedElement = updatedElementos.splice(fromIndex, 1)[0];
+      updatedElementos.splice(toIndex, 0, movedElement);
+
+      // Actualizar el orden de los elementos
+      const updatedElementosWithOrder = updatedElementos.map(
+        (elemento, index) => ({
+          ...elemento,
+          orden: index + 1,
+        })
+      );
+
+      setElementos(updatedElementosWithOrder);
+
+      // Actualizar la base de datos con los nuevos órdenes
+      const response = await fetch(
+        `${BASE_URL}/text/temas/${idText}/${idTema}/${movedElement._id}/update-order`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            orden: toIndex + 1,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          `Error al actualizar el orden de los elementos: ${response.statusText}. Detalles: ${errorData.message}`
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Error al actualizar el orden de los elementos:",
+        error.message
+      );
+    }
   };
 
   const handleDeleteTema = async () => {
@@ -127,6 +168,8 @@ const TemaDetails = ({ tema, selectedText }) => {
     }
   };
 
+  //useEffect
+  /* 
   useEffect(() => {
     const fetchData = async () => {
       const endpoint = `${BASE_URL}/text/temas/${idText}/${idTema}`;
@@ -156,8 +199,9 @@ const TemaDetails = ({ tema, selectedText }) => {
 
     const intervalId = setInterval(fetchData, 1000);
     return () => clearInterval(intervalId);
-  }, []); 
-  
+  }, []);  
+  */
+
   return (
     <div className="tema-details-container">
       <div className="tema-container row">
