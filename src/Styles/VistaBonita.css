@@ -37,3 +37,18 @@
     align-items: center;
 
   }
+
+  .pdf-download-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    border: 1px solid #0052CC;
+    background-color: #0052CC;
+    color: #ffffff;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  

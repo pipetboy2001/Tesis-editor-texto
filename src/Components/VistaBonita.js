@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./../Styles/VistaBonita.css";
 import CompromisoIcon from "./../Assets/png/i__Compromiso.png";
 import AcuerdoIcon from "./../Assets/png/i__Acuerdo.png";
 import DudaIcon from "./../Assets/png/i__Duda.png";
 import DesacuerdoIcon from "./../Assets/png/i__Desacuerdo.png";
+import ArrowDownIcon from "@atlaskit/icon/glyph/arrow-down";
+import PageIcon from "@atlaskit/icon/glyph/page";
+import jsPDF from "jspdf";
 
-const IconoPredeterminado = "ruta/al/icono-predeterminado.png";
+const IconoPredeterminado = "./../Assets/png/i__Acuerdo.png";
 
 const VistaBonita = ({ selectedText }) => {
-  const orderedTypes = ["compromiso", "Acuerdo", "Duda", "Desacuerdo"];
+  const orderedTypes = ["Compromiso", "Acuerdo", "Duda", "Desacuerdo"];
 
   const getIconByTipo = (tipo) => {
     const iconMap = {
@@ -20,6 +23,9 @@ const VistaBonita = ({ selectedText }) => {
 
     return iconMap[tipo] || IconoPredeterminado;
   };
+
+  // Utiliza useRef para crear la referencia mutable
+  const contentRef = useRef(null);
 
   const renderGroupedParagraphs = () => {
     let totalCompromiso = 0;
@@ -33,7 +39,7 @@ const VistaBonita = ({ selectedText }) => {
     selectedText.forEach((tema) => {
       tema.elementos.forEach((elemento) => {
         switch (elemento.tipo) {
-          case "compromiso":
+          case "Compromiso":
             totalCompromiso++;
             break;
           case "Duda":
@@ -50,10 +56,10 @@ const VistaBonita = ({ selectedText }) => {
         }
 
         switch (elemento.sentimiento) {
-          case "positive":
+          case "positivo":
             totalPositivo++;
             break;
-          case "negative":
+          case "negativo":
             totalNegativo++;
             break;
           case "neutral":
@@ -65,14 +71,20 @@ const VistaBonita = ({ selectedText }) => {
       });
     });
 
-    const porcentajePositivo = (totalPositivo / (totalPositivo + totalNegativo + totalNeutral)) * 100;
-    const porcentajeNegativo = (totalNegativo / (totalPositivo + totalNegativo + totalNeutral)) * 100;
-    const porcentajeNeutral = (totalNeutral / (totalPositivo + totalNegativo + totalNeutral)) * 100;
+    const porcentajePositivo =
+      (totalPositivo / (totalPositivo + totalNegativo + totalNeutral)) * 100;
+    const porcentajeNegativo =
+      (totalNegativo / (totalPositivo + totalNegativo + totalNeutral)) * 100;
+    const porcentajeNeutral =
+      (totalNeutral / (totalPositivo + totalNegativo + totalNeutral)) * 100;
 
     return (
       <div>
         <div className="summary-section">
-          <h2 className="text-center">Resumen del Informe</h2>
+          <h2 className="text-center">
+            <PageIcon />
+            Resumen del Informe
+          </h2>
           <div className="d-flex justify-content-around">
             <div>
               <p className="mb-1">Compromisos: {totalCompromiso}</p>
@@ -81,8 +93,12 @@ const VistaBonita = ({ selectedText }) => {
               <p>Desacuerdos: {totalDesacuerdo}</p>
             </div>
             <div>
-              <p className="mb-1">Porcentaje Positivo: {porcentajePositivo.toFixed(2)}%</p>
-              <p className="mb-1">Porcentaje Negativo: {porcentajeNegativo.toFixed(2)}%</p>
+              <p className="mb-1">
+                Porcentaje Positivo: {porcentajePositivo.toFixed(2)}%
+              </p>
+              <p className="mb-1">
+                Porcentaje Negativo: {porcentajeNegativo.toFixed(2)}%
+              </p>
               <p>Porcentaje Neutral: {porcentajeNeutral.toFixed(2)}%</p>
             </div>
           </div>
@@ -119,7 +135,105 @@ const VistaBonita = ({ selectedText }) => {
     );
   };
 
-  return <div className="vista-bonita">{renderGroupedParagraphs()}</div>;
+  const handleTest = () => {
+    console.log("Descargando PDF...");
+
+    // Inicializar contadores para el resumen
+    let totalCompromiso = 0;
+    let totalDuda = 0;
+    let totalAcuerdo = 0;
+    let totalDesacuerdo = 0;
+
+    // Contadores para el porcentaje de sentimientos
+    let totalPositivo = 0;
+    let totalNegativo = 0;
+    let totalNeutral = 0;
+
+    // Iterar sobre los temas y elementos
+    selectedText.forEach((tema) => {
+      tema.elementos.forEach((elemento) => {
+        // Contar tipos para el resumen
+        switch (elemento.tipo) {
+          case "Compromiso":
+            totalCompromiso++;
+            break;
+          case "Duda":
+            totalDuda++;
+            break;
+          case "Acuerdo":
+            totalAcuerdo++;
+            break;
+          case "Desacuerdo":
+            totalDesacuerdo++;
+            break;
+          default:
+            break;
+        }
+        // Contar sentimientos para el porcentaje
+        switch (elemento.sentimiento) {
+          case "positivo":
+            totalPositivo++;
+            break;
+          case "negativo":
+            totalNegativo++;
+            break;
+          case "neutral":
+            totalNeutral++;
+            break;
+          default:
+            break;
+        }
+      });
+    });
+
+    // Calcular porcentaje de sentimientos
+    const porcentajePositivo =
+      (totalPositivo / (totalPositivo + totalNegativo + totalNeutral)) * 100;
+    const porcentajeNegativo =
+      (totalNegativo / (totalPositivo + totalNegativo + totalNeutral)) * 100;
+    const porcentajeNeutral =
+      (totalNeutral / (totalPositivo + totalNegativo + totalNeutral)) * 100;
+
+    // Crear un objeto jsPDF
+    const pdf = new jsPDF();
+
+    // Texto para agregar al documento PDF
+    const texto = `
+      Valores Sentimientos
+      Positivo: ${porcentajePositivo.toFixed(2)}%
+      Negativo: ${porcentajeNegativo.toFixed(2)}%
+      Neutral: ${porcentajeNeutral.toFixed(2)}%
+
+      Tipo
+      Compromisos: ${totalCompromiso}
+      Dudas: ${totalDuda}
+      Acuerdos: ${totalAcuerdo}
+      Desacuerdos: ${totalDesacuerdo}
+    `;
+
+    // Agregar el texto al documento PDF
+    pdf.text(texto, 10, 10);
+
+    // Descargar el PDF
+    pdf.save("Resumen.pdf");
+
+    console.log("PDF descargado ¿?");
+  };
+
+  return (
+    <div>
+      {/* Contenedor del contenido a descargar */}
+      <div ref={contentRef} className="vista-bonita">
+        {renderGroupedParagraphs()}
+      </div>
+
+      {/* Botón para descargar el PDF */}
+      <div className="pdf-download-button" onClick={handleTest}>
+        <ArrowDownIcon />
+        Descargar PDF
+      </div>
+    </div>
+  );
 };
 
 export default VistaBonita;
