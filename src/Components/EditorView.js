@@ -110,19 +110,20 @@ const EditorView = ({ selectedText }) => {
   return (
     <>
       <div className="sticky-header-container">
-        <div className="EditorTexto">
-          {loading
-            ? "Cargando temas..."
-            : temas.length > 0
-            ? temas.map((tema) => (
-                <TemaDetails
-                  key={tema.id_tema}
-                  tema={tema}
-                  selectedText={selectedText}
-                />
-              ))
-            : "No hay temas disponibles"}
-        </div>
+      <div className="EditorTexto">
+  {loading
+    ? "Cargando temas..."
+    : temas.length > 0
+    ? temas.map((tema, index) => ( // Utiliza el segundo parámetro de map, el índice
+        <TemaDetails
+          key={index} // Usa el índice como clave
+          tema={tema}
+          selectedText={selectedText}
+        />
+      ))
+    : "No hay temas disponibles"}
+</div>
+
         <Button
           variant="primary"
           className="add-tema-button sticky-footer custom-button-style"
