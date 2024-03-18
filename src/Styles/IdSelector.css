@@ -1,62 +1,64 @@
-
-
 /* Estilos para el contenedor principal de IdSelector */
 .id-selector-container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-  }
-  
-  /* Estilos para el encabezado dentro de IdSelector */
-  .id-selector-container h3 {
-    color: #0052CC; /* Color primario para el encabezado */
-  }
-  
-  /* Estilos para el contenedor de las tarjetas */
-  .id-selector-container .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 20px; /* Espaciado entre las tarjetas */
-  }
-  
-  /* Estilos para el botón "Crear nueva reunión" */
-  .id-selector-container Button {
-    color: #FFFFFF;
-    margin-bottom: 16px;
-  }
-  
-  /* Estilos para las tarjetas de reunión */
-  .id-selector-container Card {
-    flex: 0 0 calc(48% - 10px); /* Tamaño de la tarjeta y espaciado entre tarjetas */
-    cursor: pointer;
-    border: 1px solid #ddd; /* Borde ligero */
-    border-radius: 8px; /* Esquinas redondeadas */
-    transition: transform 0.3s; /* Efecto de transición suave al hacer hover */
-  }
-  
-  /* Estilos para el cuerpo de las tarjetas */
-  .id-selector-container Card.Body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 16px;
-  }
-  
-  /* Estilos para el texto de las tarjetas */
-  .id-selector-container Card.Text {
-    color: #0052CC; /* Color primario para el texto de la tarjeta */
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  
-  
-  
-  /* Efecto de transición al hacer hover en la tarjeta */
-  .id-selector-container Card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
+  max-width: 800px; /* Ancho máximo del contenedor */
+  margin: auto; /* Centrar el contenedor en la página */
+  padding: 20px; /* Espaciado interno */
+}
+
+/* Estilos para el encabezado dentro de IdSelector */
+.id-selector-container h3 {
+  color: #0052CC; /* Color primario para el encabezado */
+}
+
+/* Estilos para el contenedor de las tarjetas */
+.id-selector-container .card-container {
+  display: flex; /* Usar flexbox para alinear las tarjetas */
+  flex-wrap: wrap; /* Permitir que las tarjetas se envuelvan si no caben en una línea */
+  justify-content: space-between; /* Distribuir uniformemente las tarjetas */
+  gap: 20px; /* Espaciado entre las tarjetas */
+}
+
+/* Estilos para el botón "Crear nueva reunión" */
+.id-selector-container Button {
+  color: #FFFFFF; /* Color del texto */
+  margin-bottom: 16px; /* Espaciado inferior */
+}
+
+/* Estilos para las tarjetas de reunión */
+.id-selector-container Card {
+  flex: 0 0 calc(48% - 10px); /* Tamaño de la tarjeta y espaciado entre tarjetas */
+  cursor: pointer; /* Cambiar el cursor al pasar sobre la tarjeta */
+  border: 1px solid #ddd; /* Borde ligero */
+  border-radius: 8px; /* Esquinas redondeadas */
+  transition: transform 0.3s; /* Efecto de transición suave al hacer hover */
+}
+
+/* Estilos para el cuerpo de las tarjetas */
+.id-selector-container Card.Body {
+  display: flex; /* Usar flexbox para alinear el contenido */
+  flex-direction: column; /* Alinear el contenido en una columna */
+  align-items: center; /* Centrar horizontalmente el contenido */
+  padding: 16px; /* Espaciado interno */
+}
+
+/* Estilos para el texto de las tarjetas */
+.id-selector-container Card.Text {
+  color: #0052CC; /* Color primario para el texto de la tarjeta */
+  font-size: 18px; /* Tamaño de fuente */
+  font-weight: bold; /* Negrita */
+  margin-bottom: 10px; /* Espaciado inferior */
+}
+
+/* Estilos para las tarjetas */
+.id-card {
+  margin-bottom: 16px; /* Espaciado inferior */
+  cursor: pointer; /* Cambiar el cursor al pasar sobre la tarjeta */
+  border-radius: 8px; /* Esquinas redondeadas */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  transition: box-shadow 0.3s ease; /* Efecto de transición suave */
+}
+
+/* Efecto de sombra al hacer hover en la tarjeta */
+.id-card:hover {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+}

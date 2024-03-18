@@ -34,12 +34,8 @@ const IdSelector = ({ onIdSelect }) => {
   useEffect(() => {
     fetchData();
 
-    // Establece un intervalo para volver a cargar los datos cada cierto tiempo
-    const intervalId = setInterval(() => {
-      fetchData();
-    }, 30000); // Cada 30 segundos
+    const intervalId = setInterval(fetchData, 20000);
 
-    // Limpieza del intervalo al desmontar el componente
     return () => clearInterval(intervalId);
   }, [newDocumentId]);
 
@@ -47,11 +43,11 @@ const IdSelector = ({ onIdSelect }) => {
     onIdSelect(id);
   };
 
-  const handleDelete = async (id, event) => {
+  const handleDelete = async (databaseId, event) => {
     try {
       event.stopPropagation();
 
-      const response = await fetch(`${API_URL}/delete/${id}`, {
+      const response = await fetch(`${API_URL}/delete/${databaseId}`, {
         method: 'DELETE',
       });
 
@@ -59,13 +55,12 @@ const IdSelector = ({ onIdSelect }) => {
         throw new Error(`Error al eliminar texto: ${response.statusText}`);
       }
 
-      setDatabaseIds((existingIds) => existingIds.filter((existingId) => existingId !== id));
-      setTexts((existingTexts) => existingTexts.filter((text) => text._id !== id));
+      setDatabaseIds((existingIds) => existingIds.filter((existingId) => existingId !== databaseId));
+      setTexts((existingTexts) => existingTexts.filter((text) => text._id !== databaseId));
 
-      console.log("ID eliminado: ", id);
+      console.log("ID eliminado: ", databaseId);
     } catch (error) {
       console.error("Error al eliminar texto: ", error);
-      // Manejar el error, si es necesario
     }
   };
 
@@ -73,7 +68,6 @@ const IdSelector = ({ onIdSelect }) => {
     try {
       const newDocumentData = {
         temas: [
-          // Contenido del nuevo documento
           {
             tema: "1",
             elementos: [
@@ -108,12 +102,10 @@ const IdSelector = ({ onIdSelect }) => {
 
       const createdDocument = await response.json();
 
-      // Establece el nuevo ID para desencadenar la recarga automática
       setNewDocumentId(createdDocument._id);
 
     } catch (error) {
       console.error("Error al crear el documento: ", error);
-      // Manejar el error, si es necesario
     }
   };
 
@@ -132,21 +124,24 @@ const IdSelector = ({ onIdSelect }) => {
       {loading ? (
         <p>Cargando...</p>
       ) : (
-        databaseIds.map((id) => (
+        databaseIds.map((databaseId) => (
           <Card
-            key={id}
-            style={{ marginBottom: "16px", cursor: "pointer" }}
-            onClick={() => handleIdSelect(id)}
+            key={databaseId}
+            className="id-card"
+            onClick={() => handleIdSelect(databaseId)}
           >
             <Card.Body>
-              <Card.Text>ID: {id}</Card.Text>
-              <Button appearance="primary" onClick={() => handleIdSelect(id)}>
-                ¡Haz clic aquí para seleccionar!
+              <Card.Text>ID: {databaseId}</Card.Text>
+              <Button
+                appearance="primary"
+                onClick={() => handleIdSelect(databaseId)}
+              >
+                Seleccionar
               </Button>
 
               <Button
                 appearance="danger"
-                onClick={(event) => handleDelete(id, event)}
+                onClick={(event) => handleDelete(databaseId, event)}
               >
                 Eliminar
               </Button>
