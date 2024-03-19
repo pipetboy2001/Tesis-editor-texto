@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Button from "@atlaskit/button";
 import WatchIcon from "@atlaskit/icon/glyph/watch";
-import VistaBonita from "./VistaBonita";
+//import VistaBonita from "./VistaBonita";
 import EditorView from "./EditorView";
 
 const Testing = ({ selectedId }) => {
@@ -35,25 +35,25 @@ const Testing = ({ selectedId }) => {
   return (
     <>
       <header className="app-header">
-        <Button
+        {/* <Button
           appearance="primary"
           shouldFitContainer
           onClick={handleToggleView}
         >
           <WatchIcon size="small" />
           {viewMode === "editor" ? " Ver Informe" : " Volver a Editor"}
-        </Button>
+        </Button> */}
       </header>
 
       <div className="view-mode-section">
         {viewMode === "editor" ? (
           <EditorView selectedText={selectedText} />
         ) : (
-          <VistaBonita
+          {/* <VistaBonita
             selectedId={selectedId}
             selectedText={selectedText.temas}
             
-          />
+          /> */}
         )}
       </div>
     </>
