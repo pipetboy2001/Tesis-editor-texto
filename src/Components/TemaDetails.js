@@ -60,7 +60,8 @@ const TemaDetails = ({ tema, selectedText }) => {
   
     return () => clearInterval(intervalId); // Limpiar el intervalo al desmontar el componente
   }, [idText, idTema, editOrderMode]); // Dependencia editOrderMode agregada al arreglo de dependencias
-  
+
+  elementos.sort((a, b) => a.orden - b.orden); // Ordenar elementos por el valor de orden
 
   const handleDeleteElement = async (elementId) => {
     try {
