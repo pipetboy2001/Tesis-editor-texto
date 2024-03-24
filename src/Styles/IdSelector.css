@@ -1,13 +1,27 @@
+
+/* Variables de color */
+:root {
+  --fondo: #000000; /* Color de fondo */
+  --contenedor-color: #101316; /* Color de fondo del contenedor */
+  --segundo-color: #272c30; /* Color secundario */
+  --texto-color: #FFFFFF; /* Color del texto */
+}
+
+body {
+  background-color: var(--fondo);
+}
+
 /* Estilos para el contenedor principal de IdSelector */
 .id-selector-container {
   max-width: 800px; /* Ancho máximo del contenedor */
   margin: auto; /* Centrar el contenedor en la página */
   padding: 20px; /* Espaciado interno */
+  background-color: var(--contenedor-color);
 }
 
 /* Estilos para el encabezado dentro de IdSelector */
 .id-selector-container h3 {
-  color: #0052CC; /* Color primario para el encabezado */
+  color: var(--texto-color) /* Color primario para el encabezado */
 }
 
 /* Estilos para el contenedor de las tarjetas */
@@ -16,6 +30,7 @@
   flex-wrap: wrap; /* Permitir que las tarjetas se envuelvan si no caben en una línea */
   justify-content: space-between; /* Distribuir uniformemente las tarjetas */
   gap: 20px; /* Espaciado entre las tarjetas */
+  margin-top: 20px; /* Espaciado superior */
 }
 
 /* Estilos para el botón "Crear nueva reunión" */
@@ -39,6 +54,7 @@
   flex-direction: column; /* Alinear el contenido en una columna */
   align-items: center; /* Centrar horizontalmente el contenido */
   padding: 16px; /* Espaciado interno */
+  background-color: var(--segundo-color);
 }
 
 /* Estilos para el texto de las tarjetas */

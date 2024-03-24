@@ -133,7 +133,7 @@ const TemaDetails = ({ tema, selectedText }) => {
       const response = await fetch(`${BASE_URL}/text/temas/${idText}/${idTema}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contenido: "Texto por defecto", tipo: "Duda", alineacion: "left", bold: false, italic: true, underline: false, autor: "Pipet", sentimiento: "positivo", orden: elementos.length + 1, date: new Date() }),
+        body: JSON.stringify({ contenido: "Maritza propone ¿Cómo podemos participar como constituyente? ", tipo: "Duda", alineacion: "left", bold: false, italic: true, underline: false, autor: "Maritza", sentimiento: "positivo", orden: elementos.length + 1, date: new Date() }),
       });
       if (!response.ok) {
         throw new Error(`Error al agregar el elemento: ${response.statusText}`);
@@ -187,12 +187,12 @@ const TemaDetails = ({ tema, selectedText }) => {
     const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
     return formattedDate;
   };
-
+  
   return (
     <div className="tema-details-container">
       <div className="tema-container row">
         <div className="col-md-6">
-          <h3 style={{ color: "#0052CC" }}>Tema {tema.id_tema} {tema.tema}</h3>
+          <h3>Tema {tema.ordenTema}: {tema.tema}</h3>
         </div>
         <div className="col-md-6">
           <Button variant="outline-primary" className="edit-button" onClick={handleAddElement} style={{ backgroundColor: "#0052CC", borderColor: "#0052CC" }}>

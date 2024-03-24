@@ -1,16 +1,20 @@
+/* Variables de color */
+:root {
+  --fondo: #000000; /* Color de fondo */
+  --contenedor-color: #101316; /* Color de fondo del contenedor */
+  --segundo-color: #272c30; /* Color secundario */
+  --texto-color: #FFFFFF; /* Color del texto */
+}
+
 /* Estilos generales */
 .tema-details-container {
   padding: 20px;
-  border: 1px solid #0052CC;
+  border: 1px solid #ffffff;
+  background-color: var(--segundo-color);
   border-radius: 8px;
   margin-bottom: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* Ajuste para que quede mas */
-  /* centrado */
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
   margin: 20px 10% 0;
-
-
-  
 }
 
 .tema-container {
@@ -23,7 +27,7 @@
 
 /* Estilos para el título del tema */
 .tema-container h3 {
-  color: #0052CC;
+  color: var(--texto-color);
 }
 
 /* Estilos para los botones de acción */
@@ -52,11 +56,11 @@
 
 /* Estilos para los mensajes de advertencia */
 .tema-informacion p {
-  color: #000000;
+  color: var(--texto-color);
 }
 
 .elemento-container {
-  border: 1px solid black;
+  border: 1px solid rgb(207, 207, 207);
   padding: 10px; /* Puedes ajustar el espacio interior según sea necesario */
   margin-bottom: 10px; /* Espacio entre cada elemento */
 }
@@ -64,9 +68,9 @@
 .orden-circle {
   width: 24px; /* Ancho del círculo */
   height: 24px; /* Altura del círculo */
-  background-color: #0052CC; /* Color de fondo del círculo */
+  background-color: #ffffff; /* Color de fondo del círculo */
   border-radius: 50%; /* Hace que el elemento sea un círculo */
-  color: white; /* Color del texto dentro del círculo */
+  color: rgb(0, 0, 0); /* Color del texto dentro del círculo */
   display: flex; /* Para centrar el texto verticalmente */
   justify-content: center; /* Para centrar el texto horizontalmente */
   align-items: center; /* Para centrar el texto verticalmente */

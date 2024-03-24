@@ -78,6 +78,7 @@ const EditorView = ({ selectedText }) => {
           },
           body: JSON.stringify({
             tema: newTema.tema,
+            ordenTema: temas.length + 1,
             elementos: [
               {
                 contenido: newTema.contenido,
@@ -95,18 +96,22 @@ const EditorView = ({ selectedText }) => {
           }),
         }
       );
-
+  
       if (!response.ok) {
         throw new Error(`Error al añadir tema: ${response.statusText}`);
       }
-
+  
+      // Si llegamos aquí, la solicitud fue exitosa
+      const responseData = await response.json();
+      console.log("Respuesta exitosa:", responseData);
+  
       handleCloseModal();
     } catch (error) {
       console.error("Error al añadir tema: ", error);
       // Manejar el error, si es necesario
     }
   };
-
+  
   return (
     <>
       <div className="sticky-header-container">
