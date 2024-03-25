@@ -45,13 +45,39 @@ const EditModal = ({ show, handleClose, elemento, onSave }) => {
               onChange={handleInputChange}
             />
           </Form.Group>
+          <Form.Group controlId="formSentimiento">
+            <Form.Label>Sentimiento</Form.Label>
+            <Form.Control
+              as="select"
+              name="sentimiento"
+              value={editedElemento.sentimiento}
+              onChange={handleInputChange}
+            >
+              <option value="positivo">Positivo</option>
+              <option value="negativo">Negativo</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="formTipo">
+            <Form.Label>Tipo</Form.Label>
+            <Form.Control
+              as="select"
+              name="tipo"
+              value={editedElemento.tipo}
+              onChange={handleInputChange}
+            >
+              <option value="acuerdo">Acuerdo</option>
+              <option value="duda">Duda</option>
+              <option value="compromiso">Compromiso</option>
+            </Form.Control>
+          </Form.Group>
+          
         </Form>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Cerrar
         </Button>
-        <Button variant="primary" onClick={() => onSave(editedElemento)}>
+        <Button variant="primary" onClick={handleSave}>
           Guardar Cambios
         </Button>
       </Modal.Footer>
