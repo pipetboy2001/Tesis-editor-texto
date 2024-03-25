@@ -76,3 +76,20 @@
   align-items: center; /* Para centrar el texto verticalmente */
   margin-right: 8px; /* Espacio a la derecha del círculo */
 }
+
+.accordion-button {
+  background-color: #101316;
+  color: #FFFFFF;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #202529;
+  color: #FFFFFF;
+  box-shadow: inset 0 calc(-1* var(--bs-accordion-border-width)) 0 var(--bs-accordion-border-color);
+}
+
+.accordion-item {
+  color: #1a436d;
+  background-color: #101316;
+}
+
