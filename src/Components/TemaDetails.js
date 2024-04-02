@@ -4,12 +4,14 @@ import TrashIcon from "@atlaskit/icon/glyph/trash";
 import AddCircleIcon from "@atlaskit/icon/glyph/add";
 import EditIcon from "@atlaskit/icon/glyph/edit";
 import EditModal from "./EditModal";
+import AddElementModal from "./AddElementModal";
 import "./../Styles/TemaDetails.css";
 const BASE_URL = "http://localhost:8000";
 
 const TemaDetails = ({ tema, selectedText }) => {
   const [elementos, setElementos] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showNewModal, setShowNewModal] = useState(false);
   const [allowDrag, setAllowDrag] = useState(false);
   const idText = selectedText._id;
   const idTema = tema._id;
@@ -19,6 +21,14 @@ const TemaDetails = ({ tema, selectedText }) => {
   const handleCloseEditModal = () => {
     setShowEditModal(false);
     setAllowDrag(false);
+  };
+
+  const handleCloseNewModal = () => {
+    setShowNewModal(false);
+  };
+
+  const handleShowNewModal = () => {
+    setShowNewModal(true);
   };
 
   useEffect(() => {
@@ -99,6 +109,8 @@ const TemaDetails = ({ tema, selectedText }) => {
     setShowEditModal(true); // Abrimos el modal de edición
   };
 
+
+
   const handleSaveElement = async (editedElemento) => {
     try {
       const response = await fetch(`${BASE_URL}/text/temas/${idText}/${idTema}/${editedElemento._id}`, {
@@ -127,12 +139,14 @@ const TemaDetails = ({ tema, selectedText }) => {
     setElementos(elementos.filter((elemento) => elemento._id !== deletedElementId));
   };
 
-  const handleAddElement = async () => {
+  const handleAddElement = async (newElement) => {
     try {
+      // Agregar la propiedad 'orden' al nuevo elemento
+      const updatedElement = { ...newElement, orden: elementos.length + 1 };
       const response = await fetch(`${BASE_URL}/text/temas/${idText}/${idTema}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contenido: "Maritza propone ¿Cómo podemos participar como constituyente? ", tipo: "Duda", alineacion: "left", bold: false, italic: true, underline: false, autor: "Maritza", sentimiento: "positivo", orden: elementos.length + 1, date: new Date() }),
+        body: JSON.stringify(updatedElement), // Enviar el elemento actualizado con 'orden'
       });
       if (!response.ok) {
         throw new Error(`Error al agregar el elemento: ${response.statusText}`);
@@ -144,6 +158,7 @@ const TemaDetails = ({ tema, selectedText }) => {
       console.error("Error al agregar el elemento:", error.message);
     }
   };
+  
 
   const handleDeleteTema = async () => {
     try {
@@ -190,13 +205,13 @@ const TemaDetails = ({ tema, selectedText }) => {
   return (
     <div className="tema-details-container">
       <div className="tema-container row">
-        <Accordion defaultActiveKey="0">
+        <Accordion defaultActiveKey="1">
           <Accordion.Item eventKey="1">
             <Accordion.Header><h3>Tema {tema.ordenTema}: {tema.tema}</h3></Accordion.Header>
             <Accordion.Body>
 
               <div className="col-md-6">
-                <Button variant="outline-primary" className="edit-button" onClick={handleAddElement} style={{ backgroundColor: "#0052CC", borderColor: "#0052CC" }}>
+                <Button variant="outline-primary" className="edit-button" onClick={handleShowNewModal} style={{ backgroundColor: "#0052CC", borderColor: "#0052CC" }}>
                   <AddCircleIcon size="small" /> Añadir Elemento
                 </Button>
                 <Button variant="danger" className="delete-button" onClick={handleDeleteTema} style={{ backgroundColor: "#ff5630", borderColor: "#ff5630" }}>
@@ -231,30 +246,39 @@ const TemaDetails = ({ tema, selectedText }) => {
                       </div>
                     </div>
                     <div className="row">
-
-                    <div className="">
+                      <div className="">
                         <p><strong>{elemento.autor}</strong> {elemento.contenido} , {handleFormatDate(elemento.date)} | {elemento.tipo} - {elemento.sentimiento}</p>
+                      </div>
+                    </div>
                   </div>
-                  </div>
-                </div>
                 ))}
               </div>
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
 
-        </div>
-
-        {showEditModal && (
-          <EditModal
-            show={showEditModal}
-            handleClose={handleCloseEditModal}
-            elemento={editingElemento} // Pasar editingElemento en lugar de elemento
-            onSave={handleSaveElement} // Pasar handleSaveElement directamente
-          />
-        )}
       </div>
-      );
+
+      {showEditModal && (
+        <EditModal
+          show={showEditModal}
+
+          handleClose={handleCloseEditModal}
+          elemento={editingElemento} // Pasar editingElemento en lugar de elemento
+          onSave={handleSaveElement} // Pasar handleSaveElement directamente
+        />
+      )}
+
+      {showNewModal && (
+        <AddElementModal
+        temaNombre={tema.tema}
+          show={showNewModal}
+          handleClose={handleCloseNewModal}
+          handleAddElement={handleAddElement}
+        />
+      )}
+    </div>
+  );
 };
 
-      export default TemaDetails;
+export default TemaDetails;

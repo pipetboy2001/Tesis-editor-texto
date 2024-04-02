@@ -145,21 +145,21 @@ const EditorView = ({ selectedText }) => {
           <Modal.Body>
             <Form>
               <Form.Group controlId="temaName">
-                <Form.Label>Nombre del Tema</Form.Label>
+                <Form.Label>¿Cuál es la descripción del tema?</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Ingrese el nombre del tema"
+                  placeholder="Ingrese de que trata el tema de conversación"
                   name="tema"
                   value={newTema.tema}
                   onChange={handleInputChange}
                 />
               </Form.Group>
               <Form.Group controlId="temaContent">
-                <Form.Label>Contenido del Tema</Form.Label>
+                <Form.Label>Primer elemento dialógico del tema</Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={3}
-                  placeholder="Ingrese el contenido del tema"
+                  placeholder="Ingrese elemento dialógico del tema"
                   name="contenido"
                   value={newTema.contenido}
                   onChange={handleInputChange}
