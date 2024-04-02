@@ -166,10 +166,10 @@ const EditorView = ({ selectedText }) => {
                 />
               </Form.Group>
               <Form.Group controlId="temaAutor">
-                <Form.Label>Autor</Form.Label>
+                <Form.Label>Responsable</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Ingrese el autor"
+                  placeholder="Ingrese el nombre del responsable"
                   name="autor"
                   value={newTema.autor}
                   onChange={handleInputChange}
@@ -182,7 +182,7 @@ const EditorView = ({ selectedText }) => {
               Cerrar
             </Button>
             <Button variant="primary" onClick={handleAddTema}>
-              Añadir Tema
+              Crear Tema
             </Button>
           </Modal.Footer>
         </Modal>

@@ -26,6 +26,21 @@ const EditModal = ({ show, handleClose, elemento, onSave }) => {
       </Modal.Header>
       <Modal.Body>
         <Form>
+        <Form.Group controlId="formTipo">
+            <Form.Label>Tipo</Form.Label>
+            <Form.Control
+              as="select"
+              name="tipo"
+              value={editedElemento.tipo}
+              onChange={handleInputChange}
+            >
+              <option value="Acuerdo">Acuerdo</option>
+              <option value="Duda">Duda</option>
+              <option value="Compromiso">Compromiso</option>
+              <option value="Texto Libre">Texto libre</option>
+            </Form.Control>
+          </Form.Group>
+
           <Form.Group controlId="formAutor">
             <Form.Label>Autor</Form.Label>
             <Form.Control
@@ -53,23 +68,11 @@ const EditModal = ({ show, handleClose, elemento, onSave }) => {
               value={editedElemento.sentimiento}
               onChange={handleInputChange}
             >
-              <option value="positivo">Positivo</option>
-              <option value="negativo">Negativo</option>
+              <option value="Positivo">Positivo</option>
+              <option value="Negativo">Negativo</option>
             </Form.Control>
           </Form.Group>
-          <Form.Group controlId="formTipo">
-            <Form.Label>Tipo</Form.Label>
-            <Form.Control
-              as="select"
-              name="tipo"
-              value={editedElemento.tipo}
-              onChange={handleInputChange}
-            >
-              <option value="acuerdo">Acuerdo</option>
-              <option value="duda">Duda</option>
-              <option value="compromiso">Compromiso</option>
-            </Form.Control>
-          </Form.Group>
+          
           
         </Form>
       </Modal.Body>

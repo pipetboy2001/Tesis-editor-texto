@@ -32,6 +32,22 @@ const AddElementModal = ({ show, handleClose, handleAddElement, temaNombre }) =>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="formTipo">
+                        <Form.Label>Seleccionar tipo de elemento dialógico</Form.Label>
+                        <Form.Control
+                            as="select"
+                            name="tipo"
+                            value={newElement.tipo}
+                            onChange={handleInputChange}
+                            required
+                        >
+                            <option value="Acuerdo">Acuerdo</option>
+                            <option value="Duda">Duda</option>
+                            <option value="Compromiso">Compromiso</option>
+                            <option value="Texto Libre">Texto libre</option>
+                        </Form.Control>
+                    </Form.Group>
+
                     <Form.Group controlId="formAutor">
                         <Form.Label>Nombre del responsable</Form.Label>
                         <Form.Control
@@ -64,24 +80,11 @@ const AddElementModal = ({ show, handleClose, handleAddElement, temaNombre }) =>
                             onChange={handleInputChange}
                             required
                         >
-                            <option value="positivo">Positivo</option>
-                            <option value="negativo">Negativo</option>
+                            <option value="Positivo">Positivo</option>
+                            <option value="Negativo">Negativo</option>
                         </Form.Control>
                     </Form.Group>
-                    <Form.Group controlId="formTipo">
-                        <Form.Label>Seleccionar tipo de elemento dialógico</Form.Label>
-                        <Form.Control
-                            as="select"
-                            name="tipo"
-                            value={newElement.tipo}
-                            onChange={handleInputChange}
-                            required
-                        >
-                            <option value="acuerdo">Acuerdo</option>
-                            <option value="duda">Duda</option>
-                            <option value="compromiso">Compromiso</option>
-                        </Form.Control>
-                    </Form.Group>
+                    
                     <Button variant="secondary" onClick={handleClose}>
                         Cancelar
                     </Button>

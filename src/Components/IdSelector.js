@@ -64,50 +64,64 @@ const IdSelector = ({ onIdSelect }) => {
     }
   };
 
-  const handleNewDocument = async () => {
-    try {
-      const newDocumentData = {
-        temas: [
-          {
-            tema: "1",
-            elementos: [
-              {
-                contenido: "Contenido por defecto",
-                alineacion: "left",
-                bold: false,
-                italic: false,
-                underline: false,
-                tipo: "Compromiso",
-                autor: "Pipet",
-                sentimiento: "positivo",
-                orden: 1,
-                date: new Date(),
-              },
-            ],
-          },
-        ],
-      };
-
-      const response = await fetch(`${API_URL}/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+  const handleNewDocument = () => {
+    // Muestra el modal para ingresar los detalles del tema
+    const themeDetails = window.prompt("Ingrese los detalles del tema (nombre, autor, sentimiento, tipo, contenido):");
+    
+    if (!themeDetails) {
+      return; // Sal del método si el usuario cancela
+    }
+  
+    // Divide los detalles ingresados por el usuario
+    const [themeName, author, sentiment, type,contenido] = themeDetails.split(",").map(detail => detail.trim());
+  
+    // Verifica que se hayan proporcionado todos los detalles necesarios
+    if (!themeName || !author || !sentiment || !type || !contenido) {
+      console.error("Faltan detalles del tema.");
+      return;
+    }
+  
+    const newDocumentData = {
+      temas: [
+        {
+          tema: themeName,
+          ordenTema: 1,
+          elementos: [
+            {
+              contenido: contenido,
+              autor: author,
+              sentimiento: sentiment,
+              tipo: type,
+              orden: 1,
+              date: new Date(),
+            },
+          ],
         },
-        body: JSON.stringify(newDocumentData),
-      });
-
+      ],
+    };
+  
+    // Envía la solicitud POST para crear el nuevo documento
+    fetch(`${API_URL}/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newDocumentData),
+    })
+    .then(response => {
       if (!response.ok) {
         throw new Error(`Error al crear el documento: ${response.statusText}`);
       }
-
-      const createdDocument = await response.json();
-
+      return response.json();
+    })
+    .then(createdDocument => {
       setNewDocumentId(createdDocument._id);
-
-    } catch (error) {
+    })
+    .catch(error => {
       console.error("Error al crear el documento: ", error);
-    }
+    });
   };
+  
 
   return (
     <div className="id-selector-container">
